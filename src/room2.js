@@ -57,7 +57,7 @@ function App() {
   }
 
   async function getCalendarEvents() {
-    const response = await fetch("https://www.googleapis.com/calendar/v3/calendars/primary/events", {
+    const response = await fetch("https://www.googleapis.com/calendar/v3/calendars/c_25bfaeb567556c4aed4f440ca9db7ce5f37cbc568a81925cad22b591894e96bb@group.calendar.google.com/events", {
       method: "GET",
       headers: {
         Authorization: 'Bearer ' + session.provider_token,
@@ -137,12 +137,12 @@ function App() {
     });
 
     if (isConflict) {
-        alert("มีการจองซ้ำในช่วงเวลานี้ กรุณาเลือกเวลาอื่น");
+        alert("มีการจองซ้ำในช่วงเวลานี้ กรุณาเลือกเวลาอื่น5555555");
         return;
     }
 
     const event = {
-        summary: "ห้องประชุมหมายเลข 1",
+        summary: "ห้องประชุมหมายเลข 2",
         description: `${eventName}\n${eventDescription}\nไมโครโฟน: ${additionalItems.microphone}\nโปเจคเตอร์: ${additionalItems.projector}\nพอยเตอร์: ${additionalItems.laserPointer}`,
         start: {
             dateTime: newStart.toISOString(), // ใช้ ISOString เพื่อให้แน่ใจว่าเป็นรูปแบบ UTC
@@ -154,8 +154,8 @@ function App() {
         }
     };
 
-    await fetch("https://www.googleapis.com/calendar/v3/calendars/primary/events", {
-        method: "POST",
+    await fetch("https://www.googleapis.com/calendar/v3/calendars/c_25bfaeb567556c4aed4f440ca9db7ce5f37cbc568a81925cad22b591894e96bb@group.calendar.google.com/events", {
+      method: "POST",
         headers: {
             Authorization: 'Bearer ' + session.provider_token,
             'Content-Type': 'application/json'
@@ -185,7 +185,7 @@ function App() {
       <div className="container">
         {session ? (
           <>
-            <h2>ยินดีต้อนรับ, {session.user.email} ห้องหมายเลข 1</h2>
+            <h2>ยินดีต้อนรับ, {session.user.email} ห้องหมายเลข 2</h2>
 
             <div className="calendar-container">
               <h3>ปฏิทินการจองห้องประชุม</h3>
@@ -252,20 +252,19 @@ function App() {
               <button className="btn create-btn" onClick={createCalendarEvent}>
                 ยืนยันการจอง
               </button>
-              
+
               <button className="btn sign-out-btn" onClick={signOut}>
                 ออกจากระบบ
               </button>
-              
+
               <a href="https://hoomebookingroom.web.app" className="btn back-btn">
                 กลับหน้าหลัก
               </a>
             </div>
-
           </>
         ) : (
           <>
-          <h2>กรุณาเข้าสู่ระบบเพื่อจองห้องประชุมหมายเลข 1</h2>
+          <h2>กรุณาเข้าสู่ระบบเพื่อจองห้องประชุมหมายเลข 2</h2>
           <button onClick={googleSignIn}>เข้าสู่ระบบด้วย Google</button>
           </>
         )}

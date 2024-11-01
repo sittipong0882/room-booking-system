@@ -1,38 +1,94 @@
-.App {
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  color: #333;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.calendar-container {
+  margin: 20px 0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.input-group {
+  margin: 10px 0;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input:focus,
+select:focus {
+  border-color: #007BFF;
+  outline: none;
+}
+
+.button-group {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  justify-content: center; /* จัดกลางปุ่มทั้งหมด */
+  gap: 10px; /* ระยะห่างระหว่างปุ่ม */
+  margin-top: 20px; /* เพิ่มระยะห่างด้านบน */
+}
+
+.btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s; /* เพิ่มการเปลี่ยนแปลงเมื่อมีการชี้ */
+}
+
+.create-btn {
+  background-color: #28a745;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.create-btn:hover {
+  background-color: #218838;
+  transform: translateY(-2px); /* ยกปุ่มขึ้นเล็กน้อยเมื่อชี้ */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.sign-out-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.sign-out-btn:hover {
+  background-color: #c82333;
+  transform: translateY(-2px); /* ยกปุ่มขึ้นเล็กน้อยเมื่อชี้ */
+}
+
+.back-btn {
+  background-color: #007bff; /* สีน้ำเงิน */
+  color: white;
+}
+
+.back-btn:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px); /* ยกปุ่มขึ้นเล็กน้อยเมื่อชี้ */
 }
