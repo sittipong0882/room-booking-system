@@ -1,0 +1,154 @@
+/* ใช้ฟอนต์ที่ดูทันสมัยและอ่านง่าย */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6; /* เพิ่มความห่างระหว่างบรรทัด */
+}
+
+/* การจัดตำแหน่งเนื้อหาหลัก */
+.container {
+  max-width: 800px;
+  margin: 40px auto; /* เพิ่มระยะห่างจากด้านบน */
+  padding: 30px;
+  background: #fff;
+  border-radius: 10px; /* เปลี่ยนจาก 8px เป็น 10px */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* ปรับเงาให้ชัดขึ้น */
+  border: 1px solid #ddd; /* เพิ่มกรอบให้เนื้อหาดูเด่น */
+}
+
+/* สไตล์ของหัวข้อ */
+h2 {
+  color: #333;
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold; /* เพิ่มความหนาของฟอนต์ */
+  margin-bottom: 20px; /* เพิ่มระยะห่างด้านล่าง */
+}
+
+/* การจัดระเบียบส่วนของปฏิทิน */
+.calendar-container {
+  margin: 20px 0;
+}
+
+/* การตั้งค่าสำหรับ input และ select */
+.input-group {
+  margin: 15px 0;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555; /* สีของข้อความเป็นสีเทาอ่อน */
+}
+
+input,
+select {
+  width: 100%;
+  padding: 12px; /* เพิ่มขนาดช่อง input */
+  border: 1px solid #ddd;
+  border-radius: 5px; /* เปลี่ยนเป็นมุมโค้งที่นุ่มขึ้น */
+  box-sizing: border-box;
+  font-size: 16px; /* ขนาดฟอนต์ที่ใหญ่ขึ้น */
+}
+
+input:focus,
+select:focus {
+  border-color: #007BFF;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* เพิ่มเงารอบๆ ช่องที่ถูกเลือก */
+}
+
+/* การจัดระเบียบปุ่ม */
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 15px; /* ระยะห่างระหว่างปุ่มเพิ่มขึ้น */
+  margin-top: 30px; /* เพิ่มระยะห่างด้านบน */
+}
+
+/* รูปแบบปุ่ม */
+.btn {
+  padding: 12px 20px; /* ขยายขนาดปุ่ม */
+  border: none;
+  border-radius: 5px; /* มุมปุ่มโค้ง */
+  cursor: pointer;
+  font-size: 16px; /* ขนาดฟอนต์ที่ใหญ่ขึ้น */
+  text-transform: uppercase; /* ทำให้ข้อความเป็นตัวพิมพ์ใหญ่ */
+  font-weight: bold;
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s; /* เพิ่มการเปลี่ยนแปลงเมื่อมีการชี้ */
+}
+
+.create-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.create-btn:hover {
+  background-color: #218838;
+  transform: translateY(-2px); /* ยกปุ่มขึ้นเล็กน้อยเมื่อชี้ */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* เพิ่มเงาขนาดเล็ก */
+}
+
+.sign-out-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.sign-out-btn:hover {
+  background-color: #c82333;
+  transform: translateY(-2px); /* ยกปุ่มขึ้นเล็กน้อยเมื่อชี้ */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* เพิ่มเงาขนาดเล็ก */
+}
+
+.back-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.back-btn:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px); /* ยกปุ่มขึ้นเล็กน้อยเมื่อชี้ */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* เพิ่มเงาขนาดเล็ก */
+}
+
+/* การตั้งค่าให้ input, select, และปฏิทินดูดี */
+input[type="text"], select, .react-calendar {
+  font-size: 16px; /* ขนาดฟอนต์ที่ใหญ่ขึ้น */
+  padding: 12px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+}
+
+input[type="text"]:focus, select:focus {
+  border-color: #007BFF;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* เพิ่มเงารอบๆ ช่องที่ถูกเลือก */
+}
+
+/* ปฏิทิน */
+.react-calendar {
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.react-calendar__tile {
+  font-size: 16px;
+}
+
+.react-calendar__tile--active {
+  background-color: #007bff;
+  color: white;
+}
+
+/* การจัดการแจ้งเตือน */
+.alert {
+  background-color: #ffdd57;
+  color: #3a3a3a;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}

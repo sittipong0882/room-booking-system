@@ -1,0 +1,37 @@
+/* โซนแบนเนอร์โฮม */
+.home_banner_area {
+    position: relative; /* ใช้สำหรับจัดการตำแหน่ง */
+    overflow: hidden; /* ป้องกันการล้นของเนื้อหา */
+}
+
+/* สไลด์ไอเท็ม */
+.slide-item {
+    width: 100%; /* ปรับความกว้างให้เต็มพื้นที่ */
+    height: auto; /* ปรับความสูงให้เหมาะสม */
+}
+
+/* สำหรับการใช้งานกับ Owl Carousel */
+.owl-carousel .owl-item {
+    display: flex; /* ใช้ Flexbox สำหรับการจัดเรียง */
+    justify-content: center; /* จัดแนวกลางในแนวนอน */
+    align-items: center; /* จัดแนวกลางในแนวตั้ง */
+}
+
+/* การปรับให้เหมาะสมกับหน้าจอขนาดเล็ก */
+@media (max-width: 768px) {
+    .slide-item {
+        height: 300px; /* ปรับความสูงสำหรับหน้าจอเล็ก */
+        background-size: cover; /* ปรับให้ภาพเต็มพื้นที่ */
+        background-position: center; /* จัดตำแหน่งกลาง */
+    }
+
+    .slide-item img {
+        width: 100%; /* ปรับให้ภาพเต็มความกว้าง */
+        height: auto; /* ปรับให้สูงอัตโนมัติ */
+        object-fit: cover; /* ให้ภาพเต็มพื้นที่โดยไม่เบี้ยว */
+    }
+
+    .single_travel {
+        max-width: 100%; /* ปรับขนาดรูปภาพให้เต็มพื้นที่ในห้องประชุม */
+    }
+}

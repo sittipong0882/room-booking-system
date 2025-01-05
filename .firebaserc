@@ -1,0 +1,10 @@
+{
+  "projects": {
+    "default": "hoomebookingroom",
+    "dd": "room2-e7d75",
+    "firebase use hoome-app": "hoomebookingroom",
+    "? Which project do you want to add? HoomeBookingRoom (hoomebookingroom)": "hoomebookingroom"
+  },
+  "targets": {},
+  "etags": {}
+}
