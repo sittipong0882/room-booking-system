@@ -74,6 +74,10 @@ function Room2Admin() {
     return <div className="text-center mt-5"><div className="spinner-border text-primary" role="status"><span className="sr-only">Loading...</span></div></div>;
   }
 
+  async function signOut() {
+    await supabase.auth.signOut();
+  }
+
   // ฟังก์ชันดึงข้อมูลจาก Google Calendar
   async function getCalendarEvents() {
     try {
@@ -262,11 +266,12 @@ function Room2Admin() {
                 ))}
               </ul>
             </div>
+
             <div className="text-center mt-4">
-        <button className="btn btn-secondary btn-lg" onClick={() => alert('กำลังนำคุณไปที่หน้าจัดการห้อง 2')}>
-          จัดการห้อง 2
-        </button>
-      </div>
+            <button className="btn btn-secondary btn-lg" onClick={signOut}>
+                ออกจากระบบ
+              </button>
+              </div>
           </>
 
    

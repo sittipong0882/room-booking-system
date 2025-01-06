@@ -9,7 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const localizer = momentLocalizer(moment);
 
-function Room2Admin() {
+function Room1Admin() {
   const [events, setEvents] = useState([]);
   const [weekdaySummary, setWeekdaySummary] = useState([]);
   const [popularTimes, setPopularTimes] = useState([]);
@@ -72,6 +72,10 @@ function Room2Admin() {
 
   if (isLoading) {
     return <div className="text-center mt-5"><div className="spinner-border text-primary" role="status"><span className="sr-only">Loading...</span></div></div>;
+  }
+
+  async function signOut() {
+    await supabase.auth.signOut();
   }
 
   // ฟังก์ชันดึงข้อมูลจาก Google Calendar
@@ -262,11 +266,12 @@ function Room2Admin() {
                 ))}
               </ul>
             </div>
+
             <div className="text-center mt-4">
-        <button className="btn btn-secondary btn-lg" onClick={() => alert('กำลังนำคุณไปที่หน้าจัดการห้อง 2')}>
-          จัดการห้อง 2
-        </button>
-      </div>
+            <button className="btn btn-secondary btn-lg" onClick={signOut}>
+                ออกจากระบบ
+              </button>
+              </div>
           </>
 
    
@@ -286,4 +291,4 @@ function Room2Admin() {
   );
 }
 
-export default Room2Admin;
+export default Room1Admin;
