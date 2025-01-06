@@ -282,6 +282,7 @@ function Room1() {
             </div>
           </>
         ) : (
+          
           <>
           <h2>กรุณาเข้าสู่ระบบเพื่อจองห้องประชุมหมายเลข 1</h2>
           <button onClick={googleSignIn}>เข้าสู่ระบบด้วย Google</button>

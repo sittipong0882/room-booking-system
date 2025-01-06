@@ -6,6 +6,7 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+
 const localizer = momentLocalizer(moment);
 
 function Room2Admin() {
@@ -13,6 +14,7 @@ function Room2Admin() {
   const [weekdaySummary, setWeekdaySummary] = useState([]);
   const [popularTimes, setPopularTimes] = useState([]);
   const [equipmentUsage, setEquipmentUsage] = useState({ 'ไมโครโฟน': 0, 'โปเจคเตอร์': 0, 'พอยเตอร์': 0 });
+  const [orders, setOrders] = useState([]);
 
   const session = useSession();
   const supabase = useSupabaseClient();
@@ -26,13 +28,53 @@ function Room2Admin() {
         findTopPopularTimes(fetchedEvents);
         summarizeEquipmentUsage(fetchedEvents);
       });
+      fetchOrders();
     }
   }, [session]);
+
+  // ฟังก์ชันดึงข้อมูลการจอง
+  async function fetchOrders() {
+    try {
+      const { data, error } = await supabase
+        .from('orders') // ชื่อของตารางที่เก็บออเดอร์
+        .select();
+        
+      if (error) throw error;
+      
+      setOrders(data);
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+    }
+  }
+
+  // ฟังก์ชันลบออเดอร์จากฐานข้อมูลและปฏิทิน
+  const deleteOrder = async (orderId) => {
+    try {
+      const { error } = await supabase
+        .from('orders') // ชื่อตารางที่เก็บข้อมูลออเดอร์
+        .delete()
+        .eq('id', orderId);
+
+      if (error) throw error;
+
+      // อัปเดต state หลังการลบ
+      setOrders(orders.filter(order => order.id !== orderId));
+
+      // ลบการจองจากปฏิทิน
+      setEvents(events.filter(event => event.id !== orderId));
+
+      alert('Order deleted successfully');
+    } catch (error) {
+      alert('Failed to delete order: ' + error.message);
+      console.error('Error deleting order:', error);
+    }
+  };
 
   if (isLoading) {
     return <div className="text-center mt-5"><div className="spinner-border text-primary" role="status"><span className="sr-only">Loading...</span></div></div>;
   }
 
+  // ฟังก์ชันดึงข้อมูลจาก Google Calendar
   async function getCalendarEvents() {
     try {
       const response = await fetch("https://www.googleapis.com/calendar/v3/calendars/c_c49091981c3b59d31ba1356e5ebe59a1fad27c7c51815737ee3dff56149dce10@group.calendar.google.com/events", {
@@ -50,6 +92,7 @@ function Room2Admin() {
   
       const data = await response.json();
       return data.items.map(event => ({
+        id: event.id, // Add unique ID from Google Calendar
         title: event.summary,
         start: new Date(event.start.dateTime || event.start.date),
         end: new Date(event.end.dateTime || event.end.date),
@@ -152,7 +195,7 @@ function Room2Admin() {
 
             <div className="card shadow-lg mb-4">
               <div className="card-body">
-                <h3 className="text-center text-info">ปฏิทินการจองห้องประชุม(ที่ผู้ใช้จองเข้ามา)</h3>
+                <h3 className="text-center text-info">ปฏิทินการจองห้องประชุมหมายเลข 2 (ที่ผู้ใช้จองเข้ามา)</h3>
                 <BigCalendar
                   localizer={localizer}
                   events={events}
@@ -165,7 +208,19 @@ function Room2Admin() {
                 />
               </div>
             </div>
-
+            <div className="card shadow-lg mb-4">
+              <div className="card-header text-center bg-warning text-white rounded">สรุปข้อมูลการจองทั้งหมด</div>
+              <ul className="list-group list-group-flush">
+                {orders.map(order => (
+                  <li key={order.id} className="list-group-item d-flex justify-content-between">
+                    <span>{order.name}</span> 
+                    <span className="badge bg-danger">
+                      <button onClick={() => deleteOrder(order.id)} className="btn btn-sm btn-light">ลบ</button>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
             <div className="row">
               <div className="col-md-6 mb-4">
                 <div className="card shadow-lg">
@@ -188,7 +243,7 @@ function Room2Admin() {
                     {popularTimes.map(item => (
                       <li key={item.time} className="list-group-item d-flex justify-content-between">
                         <span>{item.time}</span> 
-                        <span className="badge bg-danger">{item.count} การจอง</span>
+                        <span className="badge bg-warning">{item.count} การจอง</span>
                       </li>
                     ))}
                   </ol>
@@ -196,34 +251,28 @@ function Room2Admin() {
               </div>
             </div>
 
-            <div className="row">
-              <div className="col-md-6 mb-4">
-                <div className="card shadow-lg">
-                  <div className="card-header text-center bg-warning text-white rounded">การใช้งานวัสดุอุปกรณ์</div>
-                  <ul className="list-group list-group-flush">
-                    <li className="list-group-item d-flex justify-content-between">
-                      <span>ไมโครโฟน</span> 
-                      <span className="badge bg-info">{equipmentUsage['ไมโครโฟน']}</span>
-                    </li>
-                    <li className="list-group-item d-flex justify-content-between">
-                      <span>โปเจคเตอร์</span> 
-                      <span className="badge bg-info">{equipmentUsage['โปเจคเตอร์']}</span>
-                    </li>
-                    <li className="list-group-item d-flex justify-content-between">
-                      <span>พอยเตอร์</span> 
-                      <span className="badge bg-info">{equipmentUsage['พอยเตอร์']}</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
+            <div className="card shadow-lg mb-4">
+              <div className="card-header text-center bg-danger text-white rounded">การใช้วัสดุอุปกรณ์</div>
+              <ul className="list-group list-group-flush">
+                {Object.entries(equipmentUsage).map(([equipment, usage]) => (
+                  <li key={equipment} className="list-group-item d-flex justify-content-between">
+                    <span>{equipment}</span> 
+                    <span className="badge bg-info">{usage} ครั้ง</span>
+                  </li>
+                ))}
+              </ul>
             </div>
-
-            <div className="text-center">
-              <button className="btn btn-danger rounded-pill px-4 py-2" onClick={() => supabase.auth.signOut()}>
-                ออกจากระบบ
-              </button>
-            </div>
+            <div className="text-center mt-4">
+        <button className="btn btn-secondary btn-lg" onClick={() => alert('กำลังนำคุณไปที่หน้าจัดการห้อง 2')}>
+          จัดการห้อง 2
+        </button>
+      </div>
           </>
+
+   
+     
+
+
         ) : (
           <div className="text-center">
             <h3>กรุณาเข้าสู่ระบบเพื่อใช้งานระบบ</h3>

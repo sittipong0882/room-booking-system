@@ -6,9 +6,10 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+
 const localizer = momentLocalizer(moment);
 
-function Room1Admin() {
+function Room2Admin() {
   const [events, setEvents] = useState([]);
   const [weekdaySummary, setWeekdaySummary] = useState([]);
   const [popularTimes, setPopularTimes] = useState([]);
@@ -194,7 +195,7 @@ function Room1Admin() {
 
             <div className="card shadow-lg mb-4">
               <div className="card-body">
-                <h3 className="text-center text-info">ปฏิทินการจองห้องประชุม(ที่ผู้ใช้จองเข้ามา)</h3>
+                <h3 className="text-center text-info">ปฏิทินการจองห้องประชุมหมายเลข 1 (ที่ผู้ใช้จองเข้ามา)</h3>
                 <BigCalendar
                   localizer={localizer}
                   events={events}
@@ -261,11 +262,23 @@ function Room1Admin() {
                 ))}
               </ul>
             </div>
-          
+            <div className="text-center mt-4">
+        <button className="btn btn-secondary btn-lg" onClick={() => alert('กำลังนำคุณไปที่หน้าจัดการห้อง 2')}>
+          จัดการห้อง 2
+        </button>
+      </div>
           </>
+
+   
+     
+
+
         ) : (
-          <div className="alert alert-danger text-center">
-            กรุณาเข้าสู่ระบบเพื่อเข้าถึงหน้า admin
+          <div className="text-center">
+            <h3>กรุณาเข้าสู่ระบบเพื่อใช้งานระบบ</h3>
+            <button className="btn btn-primary rounded-pill px-4 py-2" onClick={() => supabase.auth.signInWithOAuth({ provider: 'google' })}>
+              เข้าสู่ระบบด้วย Google
+            </button>
           </div>
         )}
       </div>
@@ -273,4 +286,4 @@ function Room1Admin() {
   );
 }
 
-export default Room1Admin;
+export default Room2Admin;
