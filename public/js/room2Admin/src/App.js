@@ -5,38 +5,46 @@ import { Calendar as BigCalendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Line, Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const localizer = momentLocalizer(moment);
 
 function Room2Admin() {
-  const [events, setEvents] = useState([]);
+  const [eventsRoom1, setEventsRoom1] = useState([]);
+  const [eventsRoom2, setEventsRoom2] = useState([]);
   const [weekdaySummary, setWeekdaySummary] = useState([]);
   const [popularTimes, setPopularTimes] = useState([]);
   const [equipmentUsage, setEquipmentUsage] = useState({ 'ไมโครโฟน': 0, 'โปเจคเตอร์': 0, 'พอยเตอร์': 0 });
   const [orders, setOrders] = useState([]);
-
+  const [selectedOrder, setSelectedOrder] = useState(null);
   const session = useSession();
   const supabase = useSupabaseClient();
   const { isLoading } = useSessionContext();
 
   useEffect(() => {
     if (session) {
-      getCalendarEvents().then(fetchedEvents => {
-        setEvents(fetchedEvents);
+      getCalendarEventsRoom1().then(fetchedEvents => {
+        setEventsRoom1(fetchedEvents);
         summarizeWeekdays(fetchedEvents);
         findTopPopularTimes(fetchedEvents);
         summarizeEquipmentUsage(fetchedEvents);
       });
+
+      getCalendarEventsRoom2().then(fetchedEvents => {
+        setEventsRoom2(fetchedEvents);
+      });
+
       fetchOrders();
     }
   }, [session]);
 
-  // ฟังก์ชันดึงข้อมูลการจอง
   async function fetchOrders() {
     try {
       const { data, error } = await supabase
-        .from('orders') // ชื่อของตารางที่เก็บออเดอร์
+        .from('orders')
         .select();
         
       if (error) throw error;
@@ -47,39 +55,11 @@ function Room2Admin() {
     }
   }
 
-  // ฟังก์ชันลบออเดอร์จากฐานข้อมูลและปฏิทิน
-  const deleteOrder = async (orderId) => {
-    try {
-      const { error } = await supabase
-        .from('orders') // ชื่อตารางที่เก็บข้อมูลออเดอร์
-        .delete()
-        .eq('id', orderId);
-
-      if (error) throw error;
-
-      // อัปเดต state หลังการลบ
-      setOrders(orders.filter(order => order.id !== orderId));
-
-      // ลบการจองจากปฏิทิน
-      setEvents(events.filter(event => event.id !== orderId));
-
-      alert('Order deleted successfully');
-    } catch (error) {
-      alert('Failed to delete order: ' + error.message);
-      console.error('Error deleting order:', error);
-    }
-  };
-
-  if (isLoading) {
-    return <div className="text-center mt-5"><div className="spinner-border text-primary" role="status"><span className="sr-only">Loading...</span></div></div>;
-  }
-
   async function signOut() {
     await supabase.auth.signOut();
   }
 
-  // ฟังก์ชันดึงข้อมูลจาก Google Calendar
-  async function getCalendarEvents() {
+  async function getCalendarEventsRoom1() {
     try {
       const response = await fetch("https://www.googleapis.com/calendar/v3/calendars/c_c49091981c3b59d31ba1356e5ebe59a1fad27c7c51815737ee3dff56149dce10@group.calendar.google.com/events", {
         method: "GET",
@@ -90,33 +70,63 @@ function Room2Admin() {
   
       if (!response.ok) {
         const errorData = await response.json();
-        console.error('Error fetching events:', errorData); // Log the error details
+        console.error('Error fetching events:', errorData);
         throw new Error('ข้อผิดพลาดในการดึงข้อมูลกิจกรรม');
       }
   
       const data = await response.json();
       return data.items.map(event => ({
-        id: event.id, // Add unique ID from Google Calendar
+        id: event.id,
         title: event.summary,
         start: new Date(event.start.dateTime || event.start.date),
         end: new Date(event.end.dateTime || event.end.date),
-        description: event.description || '', // บันทึก description ถ้ามี
-        location: event.location || '', // บันทึกสถานที่
-        attendees: event.attendees || [], // ข้อมูลผู้เข้าร่วม
+        description: event.description || '',
+        location: event.location || '',
+        attendees: event.attendees || [],
       }));
     } catch (error) {
-      console.error('Caught an error:', error); // Log more information for debugging
+      console.error('Caught an error:', error);
       throw error;
     }
   }
-  
-  // สรุปจำนวนการจองในแต่ละวันของสัปดาห์
+
+  async function getCalendarEventsRoom2() {
+    try {
+      const response = await fetch("https://www.googleapis.com/calendar/v3/calendars/c_c49091981c3b59d31ba1356e5ebe59a1fad27c7c51815737ee3dff56149dce10@group.calendar.google.com/events", {
+        method: "GET",
+        headers: {
+          Authorization: 'Bearer ' + session.provider_token,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Error fetching events from Room 2:', errorData);
+        throw new Error('ข้อผิดพลาดในการดึงข้อมูลกิจกรรมจากห้อง 2');
+      }
+
+      const data = await response.json();
+      return data.items.map(event => ({
+        id: event.id,
+        title: event.summary,
+        start: new Date(event.start.dateTime || event.start.date),
+        end: new Date(event.end.dateTime || event.end.date),
+        description: event.description || '',
+        location: event.location || '',
+        attendees: event.attendees || [],
+      }));
+    } catch (error) {
+      console.error('Caught an error:', error);
+      throw error;
+    }
+  }
+
   function summarizeWeekdays(events) {
-    const weekdayCounts = Array(5).fill(0); // Monday to Friday
+    const weekdayCounts = Array(5).fill(0);
 
     events.forEach(event => {
       const day = event.start.getDay();
-      if (day >= 1 && day <= 5) { // Monday to Friday
+      if (day >= 1 && day <= 5) {
         weekdayCounts[day - 1]++;
       }
     });
@@ -130,7 +140,6 @@ function Room2Admin() {
     setWeekdaySummary(summary);
   }
 
-  // หาช่วงเวลาที่ได้รับการจองมากที่สุด
   function findTopPopularTimes(events) {
     const timeSummary = {};
 
@@ -147,19 +156,18 @@ function Room2Admin() {
     });
 
     const sortedTimes = Object.entries(timeSummary)
-      .map(([hour, count]) => ({ time: `${hour}:00 - ${parseInt(hour) + 1}:00`, count }))
-      .sort((a, b) => b.count - a.count);
+      .map(([hour, count]) => ({ time: `${hour}:00 - ${parseInt(hour) + 1}:00`, count }));
 
-    setPopularTimes(sortedTimes.slice(0, 5)); // Top 5 popular times
+    sortedTimes.sort((a, b) => b.count - a.count);
+
+    setPopularTimes(sortedTimes.slice(0, 5));
   }
 
-  // สรุปการใช้วัสดุอุปกรณ์
   function summarizeEquipmentUsage(events) {
     const equipmentUsage = { 'ไมโครโฟน': 0, 'โปเจคเตอร์': 0, 'พอยเตอร์': 0 };
 
     events.forEach(event => {
       if (event.description) {
-        // ใช้ regular expression เพื่อจับคำอุปกรณ์และตัวเลขใน description
         const microphoneMatch = event.description.match(/ไมโครโฟน:\s*(\d+)/);
         const projectorMatch = event.description.match(/โปเจคเตอร์:\s*(\d+)/);
         const pointerMatch = event.description.match(/พอยเตอร์:\s*(\d+)/);
@@ -179,6 +187,50 @@ function Room2Admin() {
     setEquipmentUsage(equipmentUsage);
   }
 
+  const equipmentChartData = {
+    labels: Object.keys(equipmentUsage),
+    datasets: [
+      {
+        label: 'การใช้วัสดุอุปกรณ์',
+        data: Object.values(equipmentUsage),
+        backgroundColor: ['#42a5f5', '#66bb6a', '#ff7043'],
+      },
+    ],
+  };
+
+  const popularTimesChartData = {
+    labels: popularTimes.map(item => item.time),
+    datasets: [
+      {
+        label: 'จำนวนการจอง',
+        data: popularTimes.map(item => item.count),
+        backgroundColor: '#66bb6a',
+      },
+    ],
+  };
+
+  const weekdayChartData = {
+    labels: weekdaySummary.map(item => item.day),
+    datasets: [
+      {
+        label: 'จำนวนการจองในแต่ละวัน',
+        data: weekdaySummary.map(item => item.count),
+        backgroundColor: '#42a5f5',
+      },
+    ],
+  };
+
+  const roomComparisonChartData = {
+    labels: ['ห้อง 1', 'ห้อง 2'],
+    datasets: [
+      {
+        label: 'จำนวนการจอง',
+        data: [eventsRoom1.length, eventsRoom2.length],
+        backgroundColor: '#ff7043',
+      },
+    ],
+  };
+
   const handleEventSelect = event => {
     alert(`
       Title: ${event.title}
@@ -197,86 +249,85 @@ function Room2Admin() {
               <h2 className="text-primary text-center">ยินดีต้อนรับ Admin, <span className="text-success">{session.user.email}</span></h2>
             </div>
 
-            <div className="card shadow-lg mb-4">
-              <div className="card-body">
-                <h3 className="text-center text-info">ปฏิทินการจองห้องประชุมหมายเลข 2 (ที่ผู้ใช้จองเข้ามา)</h3>
-                <BigCalendar
-                  localizer={localizer}
-                  events={events}
-                  startAccessor="start"
-                  endAccessor="end"
-                  style={{ height: 500, marginTop: '20px' }}
-                  defaultView="week"
-                  className="border border-light rounded"
-                  onSelectEvent={handleEventSelect}
-                />
-              </div>
-            </div>
-            <div className="card shadow-lg mb-4">
-              <div className="card-header text-center bg-warning text-white rounded">สรุปข้อมูลการจองทั้งหมด</div>
-              <ul className="list-group list-group-flush">
-                {orders.map(order => (
-                  <li key={order.id} className="list-group-item d-flex justify-content-between">
-                    <span>{order.name}</span> 
-                    <span className="badge bg-danger">
-                      <button onClick={() => deleteOrder(order.id)} className="btn btn-sm btn-light">ลบ</button>
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="row">
-              <div className="col-md-6 mb-4">
+           {/* 2 Tables on top for Room 1 and Room 2 */}
+            <div className="row mb-4">
+              <div className="col-md-12"> {/* ใช้ col-md-12 เพื่อให้ปฏิทินขยายเต็มหน้าจอ */}
                 <div className="card shadow-lg">
-                  <div className="card-header text-center bg-primary text-white rounded">การจองแยกตามวันในสัปดาห์</div>
-                  <ul className="list-group list-group-flush">
-                    {weekdaySummary.map(item => (
-                      <li key={item.day} className="list-group-item d-flex justify-content-between">
-                        <span>{item.day}</span> 
-                        <span className="badge bg-info">{item.count} การจอง</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
-              <div className="col-md-6 mb-4">
-                <div className="card shadow-lg">
-                  <div className="card-header text-center bg-success text-white rounded">ช่วงเวลาที่จองมากที่สุด 5 อันดับ</div>
-                  <ol className="list-group list-group-numbered">
-                    {popularTimes.map(item => (
-                      <li key={item.time} className="list-group-item d-flex justify-content-between">
-                        <span>{item.time}</span> 
-                        <span className="badge bg-warning">{item.count} การจอง</span>
-                      </li>
-                    ))}
-                  </ol>
+                  <div className="card-header text-center bg-info text-white rounded">ปฏิทินการจองห้องประชุม 1</div>
+                  <div className="card-body p-0"> {/* p-0 จะทำให้ไม่มี padding ภายใน เพื่อให้ปฏิทินขยายเต็มที่ */}
+                    <BigCalendar
+                      localizer={localizer}
+                      events={eventsRoom1}
+                      onSelectEvent={handleEventSelect}
+                      startAccessor="start"
+                      endAccessor="end"
+                      style={{ height: 'calc(130vh - 250px)', marginTop: '20px' }} 
+                    />
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="card shadow-lg mb-4">
-              <div className="card-header text-center bg-danger text-white rounded">การใช้วัสดุอุปกรณ์</div>
-              <ul className="list-group list-group-flush">
-                {Object.entries(equipmentUsage).map(([equipment, usage]) => (
-                  <li key={equipment} className="list-group-item d-flex justify-content-between">
-                    <span>{equipment}</span> 
-                    <span className="badge bg-info">{usage} ครั้ง</span>
-                  </li>
-                ))}
-              </ul>
+
+            {/* Layout for Equipment Usage and other Charts below */}
+            <div className="row mb-4">
+              <div className="col-md-6">
+                <div className="card shadow-lg">
+                  <div className="card-header text-center bg-success text-white rounded">การใช้วัสดุอุปกรณ์</div>
+                  <div className="card-body">
+                    <Bar data={equipmentChartData} options={{ responsive: true }} />
+                  </div>
+                </div>
+              </div>
+
+              <div className="col-md-6">
+                <div className="card shadow-lg">
+                  <div className="card-header text-center bg-info text-white rounded">เวลาในการจองที่ได้รับความนิยมสูงสุด</div>
+                  <div className="card-body">
+                    <Bar data={popularTimesChartData} options={{ responsive: true }} />
+                  </div>
+                </div>
+              </div>
             </div>
 
+            {/* Weekday and Room Comparison Charts */}
+            <div className="row mb-4">
+              <div className="col-md-6">
+                <div className="card shadow-lg">
+                  <div className="card-header text-center bg-primary text-white rounded">สรุปจำนวนการจองในแต่ละวัน</div>
+                  <div className="card-body">
+                    <Bar data={weekdayChartData} options={{ responsive: true }} />
+                  </div>
+                </div>
+              </div>
+
+              <div className="col-md-6">
+                <div className="card shadow-lg">
+                  <div className="card-header text-center bg-danger text-white rounded">การเปรียบเทียบจำนวนการจองระหว่างห้อง 1 และห้อง 2</div>
+                  <div className="card-body">
+                    <Bar data={roomComparisonChartData} options={{ responsive: true }} />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+  
+                    
             <div className="text-center mt-4">
-            <button className="btn btn-secondary btn-lg" onClick={signOut}>
-                ออกจากระบบ
+              <button 
+                  className="btn btn-primary btn-lg" 
+                  onClick={() => window.location.href = "https://calendar.google.com/calendar/u/0/r?cid=c_25bfaeb567556c4aed4f440ca9db7ce5f37cbc568a81925cad22b591894e96bb@group.calendar.google.com"}>
+                  แก้ไขข้อมูลห้องประชุม 1
               </button>
               </div>
-          </>
 
-   
-     
 
+              <div className="text-center mt-4">
+              <button className="btn btn-danger btn-lg" onClick={signOut}>
+                  ออกจากระบบ
+                </button>
+                </div>
+              </>
 
         ) : (
           <div className="text-center">

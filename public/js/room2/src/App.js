@@ -9,7 +9,7 @@ import Calendar from 'react-calendar';
 
 const localizer = momentLocalizer(moment);
 
-function Room1() {
+function Room2() {
   const [eventName, setEventName] = useState("");
   const [eventDescription, setEventDescription] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -293,4 +293,4 @@ function Room1() {
   );
 }
 
-export default Room1;
+export default Room2;
