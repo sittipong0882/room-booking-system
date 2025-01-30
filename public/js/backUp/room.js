@@ -9,7 +9,7 @@ import Calendar from 'react-calendar';
 
 const localizer = momentLocalizer(moment);
 
-function Room1() {
+function Room2() {
   const [eventName, setEventName] = useState("");
   const [eventDescription, setEventDescription] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -58,7 +58,7 @@ function Room1() {
   }
 
   async function getCalendarEvents() {
-    const response = await fetch("https://www.googleapis.com/calendar/v3/calendars/c_25bfaeb567556c4aed4f440ca9db7ce5f37cbc568a81925cad22b591894e96bb@group.calendar.google.com/events", {
+    const response = await fetch("https://www.googleapis.com/calendar/v3/calendars/c_c49091981c3b59d31ba1356e5ebe59a1fad27c7c51815737ee3dff56149dce10@group.calendar.google.com/events", {
       method: "GET",
       headers: {
         Authorization: 'Bearer ' + session.provider_token,
@@ -148,7 +148,7 @@ function Room1() {
     }
 
     const event = {
-        summary: "ห้องประชุมหมายเลข 1",
+        summary: "ห้องประชุมหมายเลข 2",
         description: `${eventName}\nเบอร์โทรศัพท์: ${phone}\n${eventDescription}\nไมโครโฟน: ${additionalItems.microphone}\nโปเจคเตอร์: ${additionalItems.projector}\nพอยเตอร์: ${additionalItems.laserPointer}`,
         start: {
             dateTime: newStart.toISOString(), // ใช้ ISOString เพื่อให้แน่ใจว่าเป็นรูปแบบ UTC
@@ -160,7 +160,7 @@ function Room1() {
         }
     };
 
-    await fetch("https://www.googleapis.com/calendar/v3/calendars/c_25bfaeb567556c4aed4f440ca9db7ce5f37cbc568a81925cad22b591894e96bb@group.calendar.google.com/events", {
+    await fetch("https://www.googleapis.com/calendar/v3/calendars/c_c49091981c3b59d31ba1356e5ebe59a1fad27c7c51815737ee3dff56149dce10@group.calendar.google.com/events", {
       method: "POST",
         headers: {
             Authorization: 'Bearer ' + session.provider_token,
@@ -190,7 +190,7 @@ function Room1() {
       <div className="container">
         {session ? (
           <>
-            <h2>ยินดีต้อนรับ, {session.user.email} ห้องหมายเลข 1</h2>
+            <h2>ยินดีต้อนรับ, {session.user.email} ห้องหมายเลข 2</h2>
 
             <div className="calendar-container">
               <h3>ปฏิทินการจองห้องประชุม</h3>
@@ -281,38 +281,16 @@ function Room1() {
               </a>
             </div>
           </>
-        
-      ) : (
-
-   //--------------------------ล็อกอิน-------------------------------//
-   <>
-  <h2>กรุณาเข้าสู่ระบบเพื่อจองห้องประชุมหมายเลข 1</h2>
-  <button 
-    onClick={googleSignIn} 
-    style={{
-      backgroundColor: "#28a745", // สีเขียว
-      color: "white",
-      border: "none",
-      padding: "12px 24px",
-      fontSize: "18px",
-      fontWeight: "bold",
-      borderRadius: "8px",
-      cursor: "pointer",
-      marginLeft: "250px", // ขยับไปทางขวา
-      transition: "0.3s",
-      boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)"
-    }}
-    onMouseOver={(e) => e.target.style.backgroundColor = "#218838"} // เปลี่ยนสีเมื่อชี้
-    onMouseOut={(e) => e.target.style.backgroundColor = "#28a745"}   // คืนค่าสีปกติ
-  >
-    เข้าสู่ระบบด้วย Google
-  </button>
-</>
-
-      )}
+        ) : (
+          
+          <>
+          <h2>กรุณาเข้าสู่ระบบเพื่อจองห้องประชุมหมายเลข 2</h2>
+          <button onClick={googleSignIn}>เข้าสู่ระบบด้วย Google</button>
+          </>
+        )}
+      </div>
     </div>
-  </div>
   );
 }
 
-export default Room1;
+export default Room2;

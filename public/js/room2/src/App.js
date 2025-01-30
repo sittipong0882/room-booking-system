@@ -283,10 +283,30 @@ function Room2() {
           </>
         ) : (
           
-          <>
-          <h2>กรุณาเข้าสู่ระบบเพื่อจองห้องประชุมหมายเลข 2</h2>
-          <button onClick={googleSignIn}>เข้าสู่ระบบด้วย Google</button>
-          </>
+          //--------------------------ล็อกอิน-------------------------------//
+   <>
+   <h2>กรุณาเข้าสู่ระบบเพื่อจองห้องประชุมหมายเลข 2</h2>
+   <button 
+     onClick={googleSignIn} 
+     style={{
+       backgroundColor: "#28a745", // สีเขียว
+       color: "white",
+       border: "none",
+       padding: "12px 24px",
+       fontSize: "18px",
+       fontWeight: "bold",
+       borderRadius: "8px",
+       cursor: "pointer",
+       marginLeft: "250px", // ขยับไปทางขวา
+       transition: "0.3s",
+       boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)"
+     }}
+     onMouseOver={(e) => e.target.style.backgroundColor = "#218838"} // เปลี่ยนสีเมื่อชี้
+     onMouseOut={(e) => e.target.style.backgroundColor = "#28a745"}   // คืนค่าสีปกติ
+   >
+     เข้าสู่ระบบด้วย Google
+   </button>
+ </>
         )}
       </div>
     </div>
