@@ -6,6 +6,7 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-calendar/dist/Calendar.css';
 import Calendar from 'react-calendar';
+import Swal from "sweetalert2";
 
 const localizer = momentLocalizer(moment);
 
@@ -119,15 +120,30 @@ function Room2() {
   };
 
   async function createCalendarEvent() {
+    //-----------------------------------//
     if (!eventName.trim()) {
-        alert("กรุณาใส่ชื่อผู้จอง");
-        return;
-    }
-
-    if (!phone.trim()) {
-        alert("กรุณาใส่หมายเลขโทรศัพท์");
-        return;
-    }
+      Swal.fire({
+          icon: "warning",
+          title: "กรุณาใส่ชื่อผู้จอง",
+          text: "ชื่อผู้จองเป็นข้อมูลที่จำเป็น กรุณากรอกชื่อ",
+          confirmButtonText: "ตกลง",
+          confirmButtonColor: "#ffc107"
+      });
+      return;
+  }
+  
+  if (!phone.trim()) {
+      Swal.fire({
+          icon: "warning",
+          title: "กรุณาใส่หมายเลขโทรศัพท์",
+          text: "หมายเลขโทรศัพท์เป็นข้อมูลที่จำเป็น กรุณากรอกหมายเลขโทรศัพท์ของคุณ",
+          confirmButtonText: "ตกลง",
+          confirmButtonColor: "#ffc107"
+      });
+      return;
+  }
+  
+  //-----------------------------------//
 
     const newStart = new Date(selectedDate);
     newStart.setHours(startHour, 0, 0, 0); // ตั้งค่าวินาทีและมิลลิวินาทีให้เป็น 0
@@ -142,11 +158,18 @@ function Room2() {
         );
     });
 
+    
+
     if (isConflict) {
-        alert("มีการจองซ้ำในช่วงเวลานี้ กรุณาเลือกเวลาอื่น");
+        Swal.fire({
+            icon: "error",
+            title: "ไม่สามารถจองได้",
+            text: "มีการจองซ้ำในช่วงเวลานี้ กรุณาเลือกเวลาอื่น",
+            confirmButtonText: "ตกลง",
+            confirmButtonColor: "#d33"
+        });
         return;
     }
-
     const event = {
         summary: "ห้องประชุมหมายเลข 2",
         description: `${eventName}\nเบอร์โทรศัพท์: ${phone}\n${eventDescription}\nไมโครโฟน: ${additionalItems.microphone}\nโปเจคเตอร์: ${additionalItems.projector}\nพอยเตอร์: ${additionalItems.laserPointer}`,
@@ -169,20 +192,37 @@ function Room2() {
         body: JSON.stringify(event),
     })
     .then((response) => {
-        if (!response.ok) throw new Error('Network response was not ok');
-        return response.json();
-    })
-    .then((data) => {
-        console.log(data);
-        alert("จองสำเร็จแล้ว กรุณาตรวจสอบตารางเวลาในปฎิทิน!");
-
-        getCalendarEvents().then(fetchedEvents => {
-            setEvents(fetchedEvents);
-        });
-    })
-    .catch(error => {
-        console.error('ข้อผิดพลาดในการจอง:', error);
-    });
+      if (!response.ok) {
+          throw new Error("Network response was not ok");
+      }
+      return response.json();
+  })
+  .then((data) => {
+      console.log(data);
+  
+      Swal.fire({
+          icon: "success",
+          title: "จองสำเร็จแล้ว!",
+          text: "กรุณาตรวจสอบตารางเวลาในปฏิทิน",
+          confirmButtonText: "ตกลง",
+          confirmButtonColor: "#28a745"
+      }).then(() => {
+          getCalendarEvents().then(fetchedEvents => {
+              setEvents(fetchedEvents);
+          });
+      });
+  })
+  .catch(error => {
+      console.error("ข้อผิดพลาดในการจอง:", error);
+  
+      Swal.fire({
+          icon: "error",
+          title: "เกิดข้อผิดพลาด!",
+          text: "ไม่สามารถทำการจองได้ กรุณาลองใหม่อีกครั้ง",
+          confirmButtonText: "ปิด",
+          confirmButtonColor: "#d33"
+      });
+  });
 }
 
   return (
@@ -283,10 +323,30 @@ function Room2() {
           </>
         ) : (
           
-          <>
-          <h2>กรุณาเข้าสู่ระบบเพื่อจองห้องประชุมหมายเลข 2</h2>
-          <button onClick={googleSignIn}>เข้าสู่ระบบด้วย Google</button>
-          </>
+          //--------------------------ล็อกอิน-------------------------------//
+   <>
+   <h2>กรุณาเข้าสู่ระบบเพื่อจองห้องประชุมหมายเลข 2</h2>
+   <button 
+     onClick={googleSignIn} 
+     style={{
+       backgroundColor: "#28a745", // สีเขียว
+       color: "white",
+       border: "none",
+       padding: "12px 24px",
+       fontSize: "18px",
+       fontWeight: "bold",
+       borderRadius: "8px",
+       cursor: "pointer",
+       marginLeft: "250px", // ขยับไปทางขวา
+       transition: "0.3s",
+       boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)"
+     }}
+     onMouseOver={(e) => e.target.style.backgroundColor = "#218838"} // เปลี่ยนสีเมื่อชี้
+     onMouseOut={(e) => e.target.style.backgroundColor = "#28a745"}   // คืนค่าสีปกติ
+   >
+     เข้าสู่ระบบด้วย Google
+   </button>
+ </>
         )}
       </div>
     </div>

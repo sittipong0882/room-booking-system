@@ -5,10 +5,11 @@ import { Calendar as BigCalendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { Bar, Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
+import { Modal, Button } from 'react-bootstrap';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
 const localizer = momentLocalizer(moment);
 
@@ -21,6 +22,11 @@ function Room1Admin() {
   const [popularTimesRoom2, setPopularTimesRoom2] = useState([]);
   const [equipmentUsageRoom1, setEquipmentUsageRoom1] = useState({ 'ไมโครโฟน': 0, 'โปรเจคเตอร์': 0, 'พอยเตอร์': 0 });
   const [equipmentUsageRoom2, setEquipmentUsageRoom2] = useState({ 'ไมโครโฟน': 0, 'โปรเจคเตอร์': 0, 'พอยเตอร์': 0 });
+  const [totalBookingsRoom1, setTotalBookingsRoom1] = useState(0);
+  const [totalBookingsRoom2, setTotalBookingsRoom2] = useState(0);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
   const session = useSession();
   const supabase = useSupabaseClient();
   const { isLoading } = useSessionContext();
@@ -29,6 +35,7 @@ function Room1Admin() {
     if (session) {
       getCalendarEventsRoom1().then(fetchedEvents => {
         setEventsRoom1(fetchedEvents);
+        setTotalBookingsRoom1(fetchedEvents.length);
         summarizeWeekdays(fetchedEvents, setWeekdaySummaryRoom1);
         findTopPopularTimes(fetchedEvents, setPopularTimesRoom1);
         summarizeEquipmentUsage(fetchedEvents, setEquipmentUsageRoom1);
@@ -36,6 +43,7 @@ function Room1Admin() {
 
       getCalendarEventsRoom2().then(fetchedEvents => {
         setEventsRoom2(fetchedEvents);
+        setTotalBookingsRoom2(fetchedEvents.length);
         summarizeWeekdays(fetchedEvents, setWeekdaySummaryRoom2);
         findTopPopularTimes(fetchedEvents, setPopularTimesRoom2);
         summarizeEquipmentUsage(fetchedEvents, setEquipmentUsageRoom2);
@@ -175,7 +183,7 @@ function Room1Admin() {
     labels: ['ไมโครโฟน', 'โปรเจคเตอร์', 'พอยเตอร์'],
     datasets: [
       {
-        label: 'ห้อง 1',
+        label: 'ห้อง 1 (ครั้ง)',
         data: [
           equipmentUsageRoom1['ไมโครโฟน'],
           equipmentUsageRoom1['โปรเจคเตอร์'],
@@ -184,7 +192,7 @@ function Room1Admin() {
         backgroundColor: '#42a5f5',
       },
       {
-        label: 'ห้อง 2',
+        label: 'ห้อง 2 (ครั้ง)',
         data: [
           equipmentUsageRoom2['ไมโครโฟน'],
           equipmentUsageRoom2['โปรเจคเตอร์'],
@@ -199,12 +207,12 @@ function Room1Admin() {
     labels: popularTimesRoom1.map(item => item.time),
     datasets: [
       {
-        label: 'ห้อง 1',
+        label: 'ห้อง 1 (ครั้ง)',
         data: popularTimesRoom1.map(item => item.count),
         backgroundColor: '#42a5f5',
       },
       {
-        label: 'ห้อง 2',
+        label: 'ห้อง 2 (ครั้ง)',
         data: popularTimesRoom2.map(item => item.count),
         backgroundColor: '#66bb6a',
       },
@@ -215,26 +223,35 @@ function Room1Admin() {
     labels: ['จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์'],
     datasets: [
       {
-        label: 'ห้อง 1',
+        label: 'ห้อง 1 (ครั้ง)',
         data: weekdaySummaryRoom1.map(item => item.count),
         backgroundColor: '#42a5f5',
       },
       {
-        label: 'ห้อง 2',
+        label: 'ห้อง 2 (ครั้ง)',
         data: weekdaySummaryRoom2.map(item => item.count),
         backgroundColor: '#66bb6a',
       },
     ],
   };
 
-  const handleEventSelect = event => {
-    alert(`
-      Title: ${event.title}
-      Description: ${event.description}
-      Location: ${event.location}
-      Attendees: ${event.attendees.map(attendee => attendee.email).join(", ")}
-    `);
+  const pieChartData = {
+    labels: ['ห้อง 1 (ครั้ง)', 'ห้อง 2 (ครั้ง)'],
+    datasets: [
+      {
+        data: [totalBookingsRoom1, totalBookingsRoom2],
+        backgroundColor: ['#42a5f5', '#66bb6a'],
+        hoverBackgroundColor: ['#2196f3', '#4caf50'],
+      },
+    ],
   };
+
+  const handleEventSelect = event => {
+    setSelectedEvent(event);
+    setShowModal(true);
+  };
+
+  const handleClose = () => setShowModal(false);
 
   return (
     <div className="App">
@@ -245,7 +262,6 @@ function Room1Admin() {
               <h2 className="text-primary text-center">ยินดีต้อนรับ Admin, <span className="text-success">{session.user.email}</span></h2>
             </div>
 
-            {/* Calendar for Room 1 */}
             <div className="row mb-4">
               <div className="col-md-6">
                 <div className="card shadow-lg">
@@ -263,7 +279,6 @@ function Room1Admin() {
                 </div>
               </div>
 
-              {/* Calendar for Room 2 */}
               <div className="col-md-6">
                 <div className="card shadow-lg">
                   <div className="card-header text-center bg-info text-white rounded">ปฏิทินการจองห้องประชุม 2</div>
@@ -281,7 +296,6 @@ function Room1Admin() {
               </div>
             </div>
 
-            {/* Layout for Equipment Usage and other Charts */}
             <div className="row mb-4">
               <div className="col-md-6">
                 <div className="card shadow-lg">
@@ -294,7 +308,7 @@ function Room1Admin() {
 
               <div className="col-md-6">
                 <div className="card shadow-lg">
-                <div className="card-header text-center rounded" style={{ backgroundColor: '#ff5733', color: 'white' }}>เวลาในการจองที่ได้รับความนิยมสูงสุด (เปรียบเทียบระหว่างห้อง)</div>
+                  <div className="card-header text-center rounded" style={{ backgroundColor: '#ff5733', color: 'white' }}>เวลาในการจองที่ได้รับความนิยมสูงสุด (เปรียบเทียบระหว่างห้อง)</div>
                   <div className="card-body">
                     <Bar data={popularTimesChartData} options={{ responsive: true }} />
                   </div>
@@ -302,13 +316,21 @@ function Room1Admin() {
               </div>
             </div>
 
-            {/* Weekday Comparison Chart */}
             <div className="row mb-4">
-              <div className="col-md-12">
+              <div className="col-md-6">
                 <div className="card shadow-lg">
                   <div className="card-header text-center bg-primary text-white rounded">สรุปจำนวนการจองในแต่ละวัน (เปรียบเทียบระหว่างห้อง)</div>
                   <div className="card-body">
                     <Bar data={weekdayChartData} options={{ responsive: true }} />
+                  </div>
+                </div>
+              </div>
+
+              <div className="col-md-6">
+                <div className="card shadow-lg">
+                  <div className="card-header text-center bg-warning text-dark rounded">เปรียบเทียบการจองระหว่างห้องประชุม</div>
+                  <div className="card-body">
+                    <Pie data={pieChartData} options={{ responsive: true }} style={{ maxHeight: '300px' }} />
                   </div>
                 </div>
               </div>
@@ -335,10 +357,69 @@ function Room1Admin() {
                 ออกจากระบบ
               </button>
             </div>
-          </>
+
+            <Modal show={showModal} onHide={handleClose} centered>
+  <Modal.Header closeButton className="bg-primary text-white">
+    <Modal.Title>รายละเอียดการจอง</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    {selectedEvent && (
+      <div className="container">
+        <div className="row mb-3">
+          <div className="col-sm-4 font-weight-bold text-secondary">ชื่อห้องประชุม:</div>
+          <div className="col-sm-8">{selectedEvent.title}</div>
+        </div>
+        <div className="row mb-3">
+          <div className="col-sm-4 font-weight-bold text-secondary">รายละเอียด:</div>
+          <div className="col-sm-8">
+            {selectedEvent.description ? (
+              selectedEvent.description.split('\n').map((line, index) => (
+                <div key={index}>{line}</div>
+              ))
+            ) : (
+              <span className="text-muted">ไม่มี</span>
+            )}
+          </div>
+        </div>
+        <div className="row mb-3">
+          <div className="col-sm-4 font-weight-bold text-secondary">สถานที่:</div>
+          <div className="col-sm-8">
+            {selectedEvent.location || <span className="text-muted">ไม่มี</span>}
+          </div>
+        </div>
+        <div className="row mb-3">
+          <div className="col-sm-4 font-weight-bold text-secondary">ผู้เข้าร่วม:</div>
+          <div className="col-sm-8">
+            {selectedEvent.attendees?.length > 0 ? (
+              selectedEvent.attendees.map((a, index) => (
+                <div key={index}>{a.email}</div>
+              ))
+            ) : (
+              <span className="text-muted">ไม่มี</span>
+            )}
+          </div>
+        </div>
+      </div>
+    )}
+      </Modal.Body>
+      <Modal.Footer className="bg-light">
+        <Button
+          style={{
+            backgroundColor: 'red',
+            color: 'white',
+            borderRadius: '5px',
+            padding: '8px 16px',
+          }}
+          onClick={handleClose}
+        >
+          ปิด
+        </Button>
+      </Modal.Footer>
+    </Modal>
+</>
         ) : (
           <div className="text-center">
-            <h3>กรุณาเข้าสู่ระบบเพื่อใช้งานระบบ</h3>
+            <h3>กรุณาเข้าสู่ระบบด้วบบัญชี ADMIN เพื่อใช้งานระบบ</h3>
             <button className="btn btn-primary rounded-pill px-4 py-2" onClick={() => supabase.auth.signInWithOAuth({ provider: 'google' })}>
               เข้าสู่ระบบด้วย Google
             </button>
@@ -347,6 +428,7 @@ function Room1Admin() {
       </div>
     </div>
   );
+
 }
 
 export default Room1Admin;
