@@ -84,6 +84,46 @@
 		<link rel="stylesheet" href="css/responsive.css">
 		<link rel="stylesheet" href="css/_button.css">
 	</div>
+
+		
+	<!-- CSS ภายในไฟล์ -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .home_banner_area {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .slide-item {
+            width: 100%;
+            max-height: 600px; /* กำหนดความสูงสูงสุด */
+            position: relative;
+        }
+
+        .slide-item img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+
+        /* ปรับขนาดแบนเนอร์สำหรับมือถือ */
+        @media (max-width: 768px) {
+            .slide-item {
+                max-height: 400px; /* ลดขนาดเมื่ออยู่ในจอเล็ก */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .slide-item {
+                max-height: 300px; /* ลดขนาดสำหรับมือถือเล็ก */
+            }
+        }
+    </style>
 	</head>
 	
 	<body>
@@ -142,26 +182,17 @@
 
 
 
+	<!--================ Home Banner Area =================-->
 	<section class="home_banner_area">
 		<div class="owl-carousel owl-theme" id="home-owl">
-			<div class="slide-item owl-lazy" data-src="img/banner/vin8.jpg"style="width: 1920px; height: 600px;">
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-12">
-						</div>
-					</div>
-				</div>
+			<div class="slide-item">
+				<img src="img/banner/vin8.jpg" alt="Banner 1">
 			</div>
-
-			<div class="slide-item owl-lazy" data-src="img/banner/vin9.jpg"style="width: 1920px; height: 600px;">
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-12">
-						</div>
-					</div>
-				</div>
+			<div class="slide-item">
+				<img src="img/banner/vin9.jpg" alt="Banner 2">
 			</div>
-		</section>
+		</div>
+	</section>
 		<section class="calendar_area">
 			<div class="container">
 				<h1>ปฏิทินห้องประชุม</h1>

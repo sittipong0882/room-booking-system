@@ -112,12 +112,28 @@
 	</div>
 	
 	<div class="center">
-		<img src="./img/photoHome/1.jpg" alt="คำอธิบายภาพ" width="1200" height="1600">
-		<img src="./img/photoHome/2.jpg" alt="คำอธิบายภาพ" width="1200" height="1600">
-		<img src="./img/photoHome/3.jpg" alt="คำอธิบายภาพ" width="1200" height="1600">
-		<img src="./img/photoHome/4.jpg" alt="คำอธิบายภาพ" width="1200" height="1600">
-		<img src="./img/photoHome/5.jpg" alt="คำอธิบายภาพ" width="1200" height="1600">
+		<img src="./img/photoHome/1.jpg" alt="คำอธิบายภาพ" class="responsive-img">
+		<img src="./img/photoHome/2.jpg" alt="คำอธิบายภาพ" class="responsive-img">
+		<img src="./img/photoHome/3.jpg" alt="คำอธิบายภาพ" class="responsive-img">
+		<img src="./img/photoHome/4.jpg" alt="คำอธิบายภาพ" class="responsive-img">
+		<img src="./img/photoHome/5.jpg" alt="คำอธิบายภาพ" class="responsive-img">
 	</div>
+	
+	<style>
+		.center {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+		}
+		
+		.responsive-img {
+			width: 100%;
+			max-width: 1200px; /* ขนาดสูงสุดของภาพ */
+			height: auto;
+			margin: 10px;
+		}
+	</style>
+	
 	
 	<style>
 		.center {
