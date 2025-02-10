@@ -59,7 +59,7 @@ function Room1() {
   }
 
   async function getCalendarEvents() {
-    const response = await fetch("https://www.googleapis.com/calendar/v3/calendars/c_25bfaeb567556c4aed4f440ca9db7ce5f37cbc568a81925cad22b591894e96bb@group.calendar.google.com/events", {
+    const response = await fetch("https://www.googleapis.com/calendar/v3/calendars/c_f3167f0a14bd4729f7194a488b83fc4ec289510e334831049a8f92476aa24622@group.calendar.google.com/events", {
       method: "GET",
       headers: {
         Authorization: 'Bearer ' + session.provider_token,
@@ -171,7 +171,7 @@ function Room1() {
   }
 
     const event = {
-        summary: "ห้องประชุมหมายเลข 1",
+        summary: "ห้องประชุมหมายเลข 3",
         description: `${eventName}\nเบอร์โทรศัพท์: ${phone}\n${eventDescription}\nไมโครโฟน: ${additionalItems.microphone}\nโปเจคเตอร์: ${additionalItems.projector}\nพอยเตอร์: ${additionalItems.laserPointer}`,
         start: {
             dateTime: newStart.toISOString(), // ใช้ ISOString เพื่อให้แน่ใจว่าเป็นรูปแบบ UTC
@@ -183,7 +183,7 @@ function Room1() {
         }
     };
 
-    await fetch("https://www.googleapis.com/calendar/v3/calendars/c_25bfaeb567556c4aed4f440ca9db7ce5f37cbc568a81925cad22b591894e96bb@group.calendar.google.com/events", {
+    await fetch("https://www.googleapis.com/calendar/v3/calendars/c_f3167f0a14bd4729f7194a488b83fc4ec289510e334831049a8f92476aa24622@group.calendar.google.com/events", {
       method: "POST",
         headers: {
             Authorization: 'Bearer ' + session.provider_token,
@@ -198,20 +198,34 @@ function Room1() {
               return response.json();
           })
           .then((data) => {
-              console.log(data);
-          
-              Swal.fire({
-                  icon: "success",
-                  title: "จองสำเร็จแล้ว!",
-                  text: "กรุณาตรวจสอบตารางเวลาในปฏิทิน",
-                  confirmButtonText: "ตกลง",
-                  confirmButtonColor: "#28a745"
-              }).then(() => {
-                  getCalendarEvents().then(fetchedEvents => {
-                      setEvents(fetchedEvents);
-                  });
-              });
-          })
+            console.log(data);
+        
+            Swal.fire({
+                icon: "success",
+                title: "จองสำเร็จแล้ว!",
+                text: "กรุณาตรวจสอบตารางเวลาในปฏิทิน",
+                confirmButtonText: "ตกลง",
+                confirmButtonColor: "#28a745"
+            }).then(() => {
+                getCalendarEvents().then(fetchedEvents => {
+                    setEvents(fetchedEvents);
+                });
+        
+                // รีเซ็ตค่าฟอร์มให้เป็นค่าเริ่มต้น
+                setEventName(""); 
+                setPhone(""); 
+                setEventDescription(""); 
+                setSelectedDate(new Date()); 
+                setStartHour(8); 
+                setEndHour(9); 
+                setAdditionalItems({
+                    projector: 0,
+                    laserPointer: 0,
+                    microphone: 0
+                });
+            });
+        })
+        
           .catch(error => {
               console.error("ข้อผิดพลาดในการจอง:", error);
           
@@ -230,10 +244,46 @@ function Room1() {
       <div className="container">
         {session ? (
           <>
-            <h2>ยินดีต้อนรับ, {session.user.email} ห้องหมายเลข 1</h2>
+                            <h2 style={{
+                    border: "3px solid #28A745", // เส้นขอบสีเขียว
+                    padding: "15px 20px", // เว้นระยะรอบตัวอักษร
+                    borderRadius: "10px", // ขอบมน
+                    textAlign: "center", // จัดข้อความตรงกลาง
+                    backgroundColor: "#DFF6DD", // พื้นหลังสีเขียวอ่อน
+                    color: "#155724", // สีข้อความให้เข้ากับธีม
+                    boxShadow: "4px 4px 10px rgba(0, 0, 0, 0.1)" // เพิ่มเงานุ่ม ๆ
+                }}>
+                    ยินดีต้อนรับ, {session.user.email} ห้องหมายเลข 3
+                </h2>
 
-            <div className="calendar-container">
-              <h3>ปฏิทินการจองห้องประชุม</h3>
+
+                        <div className="calendar-container">
+                        <h2 style={{
+                border: "3px solid #007BFF", // เส้นขอบสีน้ำเงิน
+                padding: "15px 20px", // เว้นระยะห่างขอบ
+                borderRadius: "10px", // ทำให้ขอบมน
+                textAlign: "center", // จัดให้อยู่ตรงกลาง
+                backgroundColor: "#E3F2FD", // พื้นหลังสีน้ำเงินอ่อน
+                color: "#004085", // สีข้อความให้เข้ากับธีม
+                boxShadow: "4px 4px 10px rgba(0, 0, 0, 0.1)" // เพิ่มเงาให้นุ่มๆ
+            }}>
+                ปฏิทินการจองห้องประชุม
+            </h2>
+
+              <div style={{ display: "flex", justifyContent: "space-between", gap: "20px" }}>
+    <h3 style={{ backgroundColor: "red", color: "white", padding: "10px", borderRadius: "5px" }}>
+        การจองเต็มทั้งวัน
+    </h3>
+    <h3 style={{ backgroundColor: "green", color: "white", padding: "10px", borderRadius: "5px" }}>
+        การจองว่างในบางเวลา
+    </h3>
+    <h3 style={{ backgroundColor: "gray", color: "white", padding: "10px", borderRadius: "5px" }}>
+        การจองว่างทั้งวัน
+    </h3>
+</div>
+
+
+
               <BigCalendar
                 localizer={localizer}
                 events={events}
@@ -326,7 +376,7 @@ function Room1() {
 
    //--------------------------ล็อกอิน-------------------------------//
    <>
-  <h2>กรุณาเข้าสู่ระบบเพื่อจองห้องประชุมหมายเลข 1</h2>
+  <h2>กรุณาเข้าสู่ระบบเพื่อจองห้องประชุมหมายเลข 3</h2>
   <button 
     onClick={googleSignIn} 
     style={{

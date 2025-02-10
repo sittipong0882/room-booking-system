@@ -58,8 +58,10 @@ function Room2() {
     await supabase.auth.signOut();
   }
 
+  //--ดึงข้อมูลปฎิทิน--//
   async function getCalendarEvents() {
-    const response = await fetch("https://www.googleapis.com/calendar/v3/calendars/c_c49091981c3b59d31ba1356e5ebe59a1fad27c7c51815737ee3dff56149dce10@group.calendar.google.com/events", {
+    const response = await fetch
+    ("https://www.googleapis.com/calendar/v3/calendars/c_c49091981c3b59d31ba1356e5ebe59a1fad27c7c51815737ee3dff56149dce10@group.calendar.google.com/events", {
       method: "GET",
       headers: {
         Authorization: 'Bearer ' + session.provider_token,
@@ -198,20 +200,34 @@ function Room2() {
       return response.json();
   })
   .then((data) => {
-      console.log(data);
-  
-      Swal.fire({
-          icon: "success",
-          title: "จองสำเร็จแล้ว!",
-          text: "กรุณาตรวจสอบตารางเวลาในปฏิทิน",
-          confirmButtonText: "ตกลง",
-          confirmButtonColor: "#28a745"
-      }).then(() => {
-          getCalendarEvents().then(fetchedEvents => {
-              setEvents(fetchedEvents);
-          });
-      });
-  })
+    console.log(data);
+
+    Swal.fire({
+        icon: "success",
+        title: "จองสำเร็จแล้ว!",
+        text: "กรุณาตรวจสอบตารางเวลาในปฏิทิน",
+        confirmButtonText: "ตกลง",
+        confirmButtonColor: "#28a745"
+    }).then(() => {
+        getCalendarEvents().then(fetchedEvents => {
+            setEvents(fetchedEvents);
+        });
+
+        // รีเซ็ตค่าฟอร์มให้เป็นค่าเริ่มต้น
+        setEventName(""); 
+        setPhone(""); 
+        setEventDescription(""); 
+        setSelectedDate(new Date()); 
+        setStartHour(8); 
+        setEndHour(9); 
+        setAdditionalItems({
+            projector: 0,
+            laserPointer: 0,
+            microphone: 0
+        });
+    });
+})
+
   .catch(error => {
       console.error("ข้อผิดพลาดในการจอง:", error);
   
@@ -226,14 +242,50 @@ function Room2() {
 }
 
   return (
-    <div className="App">
+<div className="App">
       <div className="container">
         {session ? (
           <>
-            <h2>ยินดีต้อนรับ, {session.user.email} ห้องหมายเลข 2</h2>
+                            <h2 style={{
+                    border: "3px solid #28A745", // เส้นขอบสีเขียว
+                    padding: "15px 20px", // เว้นระยะรอบตัวอักษร
+                    borderRadius: "10px", // ขอบมน
+                    textAlign: "center", // จัดข้อความตรงกลาง
+                    backgroundColor: "#DFF6DD", // พื้นหลังสีเขียวอ่อน
+                    color: "#155724", // สีข้อความให้เข้ากับธีม
+                    boxShadow: "4px 4px 10px rgba(0, 0, 0, 0.1)" // เพิ่มเงานุ่ม ๆ
+                }}>
+                    ยินดีต้อนรับ, {session.user.email} ห้องหมายเลข 2
+                </h2>
 
-            <div className="calendar-container">
-              <h3>ปฏิทินการจองห้องประชุม</h3>
+
+                        <div className="calendar-container">
+                        <h2 style={{
+                border: "3px solid #007BFF", // เส้นขอบสีน้ำเงิน
+                padding: "15px 20px", // เว้นระยะห่างขอบ
+                borderRadius: "10px", // ทำให้ขอบมน
+                textAlign: "center", // จัดให้อยู่ตรงกลาง
+                backgroundColor: "#E3F2FD", // พื้นหลังสีน้ำเงินอ่อน
+                color: "#004085", // สีข้อความให้เข้ากับธีม
+                boxShadow: "4px 4px 10px rgba(0, 0, 0, 0.1)" // เพิ่มเงาให้นุ่มๆ
+            }}>
+                ปฏิทินการจองห้องประชุม
+            </h2>
+
+              <div style={{ display: "flex", justifyContent: "space-between", gap: "20px" }}>
+    <h3 style={{ backgroundColor: "red", color: "white", padding: "10px", borderRadius: "5px" }}>
+        การจองเต็มทั้งวัน
+    </h3>
+    <h3 style={{ backgroundColor: "green", color: "white", padding: "10px", borderRadius: "5px" }}>
+        การจองว่างในบางเวลา
+    </h3>
+    <h3 style={{ backgroundColor: "gray", color: "white", padding: "10px", borderRadius: "5px" }}>
+        การจองว่างทั้งวัน
+    </h3>
+</div>
+
+
+
               <BigCalendar
                 localizer={localizer}
                 events={events}
@@ -250,7 +302,6 @@ function Room2() {
                 }}
               />
             </div>
-
             <hr />
             <div>
               <label>ชื่อผู้จอง:</label>
