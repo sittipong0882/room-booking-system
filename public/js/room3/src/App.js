@@ -10,7 +10,7 @@ import Swal from "sweetalert2";
 
 const localizer = momentLocalizer(moment);
 
-function Room1() {
+function Room2() {
   const [eventName, setEventName] = useState("");
   const [eventDescription, setEventDescription] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -58,8 +58,10 @@ function Room1() {
     await supabase.auth.signOut();
   }
 
+  //--ดึงข้อมูลปฎิทิน--//
   async function getCalendarEvents() {
-    const response = await fetch("https://www.googleapis.com/calendar/v3/calendars/c_f3167f0a14bd4729f7194a488b83fc4ec289510e334831049a8f92476aa24622@group.calendar.google.com/events", {
+    const response = await fetch
+    ("https://www.googleapis.com/calendar/v3/calendars/c_f3167f0a14bd4729f7194a488b83fc4ec289510e334831049a8f92476aa24622@group.calendar.google.com/events", {
       method: "GET",
       headers: {
         Authorization: 'Bearer ' + session.provider_token,
@@ -121,30 +123,29 @@ function Room1() {
 
   async function createCalendarEvent() {
     //-----------------------------------//
-        if (!eventName.trim()) {
-          Swal.fire({
-              icon: "warning",
-              title: "กรุณาใส่ชื่อผู้จอง",
-              text: "ชื่อผู้จองเป็นข้อมูลที่จำเป็น กรุณากรอกชื่อ",
-              confirmButtonText: "ตกลง",
-              confirmButtonColor: "#ffc107"
-          });
-          return;
-      }
-      //
-      
-      if (!phone.trim()) {
-          Swal.fire({
-              icon: "warning",
-              title: "กรุณาใส่หมายเลขโทรศัพท์",
-              text: "หมายเลขโทรศัพท์เป็นข้อมูลที่จำเป็น กรุณากรอกหมายเลขโทรศัพท์ของคุณ",
-              confirmButtonText: "ตกลง",
-              confirmButtonColor: "#ffc107"
-          });
-          return;
-      }
-      
-      //-----------------------------------//
+    if (!eventName.trim()) {
+      Swal.fire({
+          icon: "warning",
+          title: "กรุณาใส่ชื่อผู้จอง",
+          text: "ชื่อผู้จองเป็นข้อมูลที่จำเป็น กรุณากรอกชื่อ",
+          confirmButtonText: "ตกลง",
+          confirmButtonColor: "#ffc107"
+      });
+      return;
+  }
+  
+  if (!phone.trim()) {
+      Swal.fire({
+          icon: "warning",
+          title: "กรุณาใส่หมายเลขโทรศัพท์",
+          text: "หมายเลขโทรศัพท์เป็นข้อมูลที่จำเป็น กรุณากรอกหมายเลขโทรศัพท์ของคุณ",
+          confirmButtonText: "ตกลง",
+          confirmButtonColor: "#ffc107"
+      });
+      return;
+  }
+  
+  //-----------------------------------//
 
     const newStart = new Date(selectedDate);
     newStart.setHours(startHour, 0, 0, 0); // ตั้งค่าวินาทีและมิลลิวินาทีให้เป็น 0
@@ -159,17 +160,18 @@ function Room1() {
         );
     });
 
-    if (isConflict) {
-      Swal.fire({
-          icon: "error",
-          title: "ไม่สามารถจองได้",
-          text: "มีการจองซ้ำในช่วงเวลานี้ กรุณาเลือกเวลาอื่น",
-          confirmButtonText: "ตกลง",
-          confirmButtonColor: "#d33"
-      });
-      return;
-  }
+    
 
+    if (isConflict) {
+        Swal.fire({
+            icon: "error",
+            title: "ไม่สามารถจองได้",
+            text: "มีการจองซ้ำในช่วงเวลานี้ กรุณาเลือกเวลาอื่น",
+            confirmButtonText: "ตกลง",
+            confirmButtonColor: "#d33"
+        });
+        return;
+    }
     const event = {
         summary: "ห้องประชุมหมายเลข 3",
         description: `${eventName}\nเบอร์โทรศัพท์: ${phone}\n${eventDescription}\nไมโครโฟน: ${additionalItems.microphone}\nโปเจคเตอร์: ${additionalItems.projector}\nพอยเตอร์: ${additionalItems.laserPointer}`,
@@ -191,56 +193,56 @@ function Room1() {
         },
         body: JSON.stringify(event),
     })
-            .then((response) => {
-              if (!response.ok) {
-                  throw new Error("Network response was not ok");
-              }
-              return response.json();
-          })
-          .then((data) => {
-            console.log(data);
-        
-            Swal.fire({
-                icon: "success",
-                title: "จองสำเร็จแล้ว!",
-                text: "กรุณาตรวจสอบตารางเวลาในปฏิทิน",
-                confirmButtonText: "ตกลง",
-                confirmButtonColor: "#28a745"
-            }).then(() => {
-                getCalendarEvents().then(fetchedEvents => {
-                    setEvents(fetchedEvents);
-                });
-        
-                // รีเซ็ตค่าฟอร์มให้เป็นค่าเริ่มต้น
-                setEventName(""); 
-                setPhone(""); 
-                setEventDescription(""); 
-                setSelectedDate(new Date()); 
-                setStartHour(8); 
-                setEndHour(9); 
-                setAdditionalItems({
-                    projector: 0,
-                    laserPointer: 0,
-                    microphone: 0
-                });
-            });
-        })
-        
-          .catch(error => {
-              console.error("ข้อผิดพลาดในการจอง:", error);
-          
-              Swal.fire({
-                  icon: "error",
-                  title: "เกิดข้อผิดพลาด!",
-                  text: "ไม่สามารถทำการจองได้ กรุณาลองใหม่อีกครั้ง",
-                  confirmButtonText: "ปิด",
-                  confirmButtonColor: "#d33"
-              });
-          });
+    .then((response) => {
+      if (!response.ok) {
+          throw new Error("Network response was not ok");
+      }
+      return response.json();
+  })
+  .then((data) => {
+    console.log(data);
+
+    Swal.fire({
+        icon: "success",
+        title: "จองสำเร็จแล้ว!",
+        text: "กรุณาตรวจสอบตารางเวลาในปฏิทิน",
+        confirmButtonText: "ตกลง",
+        confirmButtonColor: "#28a745"
+    }).then(() => {
+        getCalendarEvents().then(fetchedEvents => {
+            setEvents(fetchedEvents);
+        });
+
+        // รีเซ็ตค่าฟอร์มให้เป็นค่าเริ่มต้น
+        setEventName(""); 
+        setPhone(""); 
+        setEventDescription(""); 
+        setSelectedDate(new Date()); 
+        setStartHour(8); 
+        setEndHour(9); 
+        setAdditionalItems({
+            projector: 0,
+            laserPointer: 0,
+            microphone: 0
+        });
+    });
+})
+
+  .catch(error => {
+      console.error("ข้อผิดพลาดในการจอง:", error);
+  
+      Swal.fire({
+          icon: "error",
+          title: "เกิดข้อผิดพลาด!",
+          text: "ไม่สามารถทำการจองได้ กรุณาลองใหม่อีกครั้ง",
+          confirmButtonText: "ปิด",
+          confirmButtonColor: "#d33"
+      });
+  });
 }
 
   return (
-    <div className="App">
+<div className="App">
       <div className="container">
         {session ? (
           <>
@@ -300,7 +302,6 @@ function Room1() {
                 }}
               />
             </div>
-
             <hr />
             <div>
               <label>ชื่อผู้จอง:</label>
@@ -371,38 +372,36 @@ function Room1() {
               </a>
             </div>
           </>
-        
-      ) : (
-
-   //--------------------------ล็อกอิน-------------------------------//
+        ) : (
+          
+          //--------------------------ล็อกอิน-------------------------------//
    <>
-  <h2>กรุณาเข้าสู่ระบบเพื่อจองห้องประชุมหมายเลข 3</h2>
-  <button 
-    onClick={googleSignIn} 
-    style={{
-      backgroundColor: "#28a745", // สีเขียว
-      color: "white",
-      border: "none",
-      padding: "12px 24px",
-      fontSize: "18px",
-      fontWeight: "bold",
-      borderRadius: "8px",
-      cursor: "pointer",
-      marginLeft: "250px", // ขยับไปทางขวา
-      transition: "0.3s",
-      boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)"
-    }}
-    onMouseOver={(e) => e.target.style.backgroundColor = "#218838"} // เปลี่ยนสีเมื่อชี้
-    onMouseOut={(e) => e.target.style.backgroundColor = "#28a745"}   // คืนค่าสีปกติ
-  >
-    เข้าสู่ระบบด้วย Google
-  </button>
-</>
-
-      )}
+   <h2>กรุณาเข้าสู่ระบบเพื่อจองห้องประชุมหมายเลข 3</h2>
+   <button 
+     onClick={googleSignIn} 
+     style={{
+       backgroundColor: "#28a745", // สีเขียว
+       color: "white",
+       border: "none",
+       padding: "12px 24px",
+       fontSize: "18px",
+       fontWeight: "bold",
+       borderRadius: "8px",
+       cursor: "pointer",
+       marginLeft: "250px", // ขยับไปทางขวา
+       transition: "0.3s",
+       boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)"
+     }}
+     onMouseOver={(e) => e.target.style.backgroundColor = "#218838"} // เปลี่ยนสีเมื่อชี้
+     onMouseOut={(e) => e.target.style.backgroundColor = "#28a745"}   // คืนค่าสีปกติ
+   >
+     เข้าสู่ระบบด้วย Google
+   </button>
+ </>
+        )}
+      </div>
     </div>
-  </div>
   );
 }
 
-export default Room1;
+export default Room2;
