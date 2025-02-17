@@ -544,7 +544,23 @@ function RoomAdmin() {
           >
             ออกจากระบบ
           </button>
+          <a href="https://hoomebookingroom.web.app"
+            className="btn back-btn"
+            style={{
+              backgroundColor: "#007bff", // สีฟ้าน้ำเงิน
+              color: "white",
+              padding: "10px 20px",
+              borderRadius: "8px",
+              textDecoration: "none",
+              fontWeight: "bold",
+              display: "inline-block",
+              textAlign: "center"
+            }}>
+            กลับหน้าหลัก
+          </a>
+
         </div>
+
 
 
       </div>

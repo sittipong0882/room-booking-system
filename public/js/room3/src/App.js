@@ -20,6 +20,7 @@ function Room2() {
     projector: 0,
     laserPointer: 0,
     microphone: 0,
+    computer: 0, // ✅ เพิ่มตัวเลือกคอมพิวเตอร์
   });
   const [phone, setPhone] = useState(""); // สถานะสำหรับเบอร์โทรศัพท์
 
@@ -174,7 +175,11 @@ function Room2() {
     }
     const event = {
         summary: "ห้องประชุมหมายเลข 3",
-        description: `${eventName}\nเบอร์โทรศัพท์: ${phone}\n${eventDescription}\nไมโครโฟน: ${additionalItems.microphone}\nโปเจคเตอร์: ${additionalItems.projector}\nพอยเตอร์: ${additionalItems.laserPointer}`,
+      description: `${eventName}\nเบอร์โทรศัพท์: ${phone}\n${eventDescription}
+      ไมโครโฟน: ${additionalItems.microphone}
+      โปเจคเตอร์: ${additionalItems.projector}
+      พอยเตอร์: ${additionalItems.laserPointer}
+      คอมพิวเตอร์: ${additionalItems.computer}`, // ✅ เพิ่มจำนวนคอมพิวเตอร์ 
         start: {
             dateTime: newStart.toISOString(), // ใช้ ISOString เพื่อให้แน่ใจว่าเป็นรูปแบบ UTC
             timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // ใช้ time zone ของเครื่องผู้ใช้
@@ -339,22 +344,25 @@ function Room2() {
                 {[...Array(11)].map((_, index) => (
                   <option key={index} value={index + 9}>{index + 9}:00</option>
                 ))}
-              </select>
-
-              <label>อุปกรณ์เสริม:</label>
+              </select><label>อุปกรณ์เสริม:</label>
               <label>ไมโครโฟน:</label>
-              <select value={additionalItems.microphone} onChange={e => setAdditionalItems({...additionalItems, microphone: parseInt(e.target.value)})}>
-                {[0, 1, 2, 3].map(item => <option key={item} value={item}>{item}</option>)}
+              <select value={additionalItems.microphone} onChange={e => setAdditionalItems({ ...additionalItems, microphone: parseInt(e.target.value) })}>
+                {[...Array(11).keys()].map(item => <option key={item} value={item}>{item}</option>)}
               </select>
 
               <label>โปเจคเตอร์:</label>
-              <select value={additionalItems.projector} onChange={e => setAdditionalItems({...additionalItems, projector: parseInt(e.target.value)})}>
-                {[0, 1, 2, 3].map(item => <option key={item} value={item}>{item}</option>)}
+              <select value={additionalItems.projector} onChange={e => setAdditionalItems({ ...additionalItems, projector: parseInt(e.target.value) })}>
+                {[...Array(11).keys()].map(item => <option key={item} value={item}>{item}</option>)}
               </select>
 
               <label>พอยเตอร์:</label>
-              <select value={additionalItems.laserPointer} onChange={e => setAdditionalItems({...additionalItems, laserPointer: parseInt(e.target.value)})}>
-                {[0, 1, 2, 3].map(item => <option key={item} value={item}>{item}</option>)}
+              <select value={additionalItems.laserPointer} onChange={e => setAdditionalItems({ ...additionalItems, laserPointer: parseInt(e.target.value) })}>
+                {[...Array(11).keys()].map(item => <option key={item} value={item}>{item}</option>)}
+              </select>
+
+              <label>คอมพิวเตอร์:</label>
+              <select value={additionalItems.computer} onChange={e => setAdditionalItems({ ...additionalItems, computer: parseInt(e.target.value) })}>
+                {[...Array(11).keys()].map(item => <option key={item} value={item}>{item}</option>)}
               </select>
             </div>
             <hr />
