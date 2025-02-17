@@ -602,8 +602,6 @@ function RoomAdmin() {
           />
         </div>
 
-
-
         <Modal show={showModal} onHide={handleClose} centered>
           <Modal.Header closeButton className="bg-primary text-white">
             <Modal.Title>รายละเอียดการจอง</Modal.Title>
@@ -625,6 +623,18 @@ function RoomAdmin() {
                     ) : (
                       <span className="text-muted">ไม่มี</span>
                     )}
+                  </div>
+                </div>
+                <div className="row mb-3">
+                  <div className="col-sm-4 font-weight-bold text-secondary">เวลาเริ่ม:</div>
+                  <div className="col-sm-8">
+                    {moment(selectedEvent.start).format('HH:mm')} น.
+                  </div>
+                </div>
+                <div className="row mb-3">
+                  <div className="col-sm-4 font-weight-bold text-secondary">เวลาสิ้นสุด:</div>
+                  <div className="col-sm-8">
+                    {moment(selectedEvent.end).format('HH:mm')} น.
                   </div>
                 </div>
                 <div className="row mb-3">
@@ -657,6 +667,7 @@ function RoomAdmin() {
             </Button>
           </Modal.Footer>
         </Modal>
+
 
         {/* กราฟการใช้งานวัสดุอุปกรณ์ */}
         <div className="row mb-4">
