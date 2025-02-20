@@ -637,24 +637,7 @@ function RoomAdmin() {
                     {moment(selectedEvent.end).format('HH:mm')} น.
                   </div>
                 </div>
-                <div className="row mb-3">
-                  <div className="col-sm-4 font-weight-bold text-secondary">สถานที่:</div>
-                  <div className="col-sm-8">
-                    {selectedEvent.location || <span className="text-muted">ไม่มี</span>}
-                  </div>
-                </div>
-                <div className="row mb-3">
-                  <div className="col-sm-4 font-weight-bold text-secondary">ผู้เข้าร่วม:</div>
-                  <div className="col-sm-8">
-                    {selectedEvent.attendees?.length > 0 ? (
-                      selectedEvent.attendees.map((a, index) => (
-                        <div key={index}>{a.email}</div>
-                      ))
-                    ) : (
-                      <span className="text-muted">ไม่มี</span>
-                    )}
-                  </div>
-                </div>
+              
               </div>
             )}
           </Modal.Body>
