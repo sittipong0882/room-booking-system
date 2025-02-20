@@ -172,7 +172,7 @@ function Room1() {
     }
 
     const event = {
-      summary: "ห้องประชุมหมายเลข 4",
+      summary: "ห้องประชุมลีลาวดี",
       description: `${eventName}\nเบอร์โทรศัพท์: ${phone}\n${eventDescription}
         ไมโครโฟน: ${additionalItems.microphone}
         โปเจคเตอร์: ${additionalItems.projector}
@@ -258,7 +258,7 @@ function Room1() {
               color: "#155724", // สีข้อความให้เข้ากับธีม
               boxShadow: "4px 4px 10px rgba(0, 0, 0, 0.1)" // เพิ่มเงานุ่ม ๆ
             }}>
-              ยินดีต้อนรับ, {session.user.email} ห้องหมายเลข 4
+              ยินดีต้อนรับ, {session.user.email} ห้องประชุมลีลาวดี
             </h2>
 
 
@@ -384,7 +384,7 @@ function Room1() {
 
           //--------------------------ล็อกอิน-------------------------------//
           <>
-            <h2>กรุณาเข้าสู่ระบบเพื่อจองห้องประชุมหมายเลข 4</h2>
+            <h2>กรุณาเข้าสู่ระบบเพื่อจองห้องประชุมลีลาวดี</h2>
             <button
               onClick={googleSignIn}
               style={{
