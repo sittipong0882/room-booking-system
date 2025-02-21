@@ -389,7 +389,7 @@ function RoomAdmin() {
         backgroundColor: '#42a5f5',
       },
       {
-        label: 'ห้อง 2 (ครั้ง)',
+        label: 'ห้องประชุมอินทนิล (ครั้ง)',
         data: [
           summarizeEquipmentUsage(eventsRoom2)['ไมโครโฟน'],
           summarizeEquipmentUsage(eventsRoom2)['โปรเจคเตอร์'],
@@ -399,7 +399,7 @@ function RoomAdmin() {
         backgroundColor: '#66bb6a',
       },
       {
-        label: 'ห้อง 3 (ครั้ง)',
+        label: 'ห้องประชุมชวนชม (ครั้ง)',
         data: [
           summarizeEquipmentUsage(eventsRoom3)['ไมโครโฟน'],
           summarizeEquipmentUsage(eventsRoom3)['โปรเจคเตอร์'],
@@ -409,7 +409,7 @@ function RoomAdmin() {
         backgroundColor: '#ff8c00',
       },
       {
-        label: 'ห้อง 4 (ครั้ง)',
+        label: 'ห้องประชุมลีลาวดี (ครั้ง)',
         data: [
           summarizeEquipmentUsage(eventsRoom4)['ไมโครโฟน'],
           summarizeEquipmentUsage(eventsRoom4)['โปรเจคเตอร์'],
@@ -485,9 +485,9 @@ function RoomAdmin() {
     labels: ['08:00 - 09:00', '09:00 - 10:00', '10:00 - 11:00', '11:00 - 12:00', '12:00 - 13:00'],
     datasets: [
       { label: 'ห้องประชุมชัยพฤกษ์ (ครั้ง)', data: popularTimesRoom1.map(item => item.count), backgroundColor: '#42a5f5' },
-      { label: 'ห้อง 2 (ครั้ง)', data: popularTimesRoom2.map(item => item.count), backgroundColor: '#66bb6a' },
-      { label: 'ห้อง 3 (ครั้ง)', data: popularTimesRoom3.map(item => item.count), backgroundColor: '#ff8c00' },
-      { label: 'ห้อง 4 (ครั้ง)', data: popularTimesRoom4.map(item => item.count), backgroundColor: '#ff5733' },
+      { label: 'ห้องประชุมอินทนิล (ครั้ง)', data: popularTimesRoom2.map(item => item.count), backgroundColor: '#66bb6a' },
+      { label: 'ห้องประชุมชวนชม (ครั้ง)', data: popularTimesRoom3.map(item => item.count), backgroundColor: '#ff8c00' },
+      { label: 'ห้องประชุมลีลาวดี (ครั้ง)', data: popularTimesRoom4.map(item => item.count), backgroundColor: '#ff5733' },
       { label: 'ห้อง 5 (ครั้ง)', data: popularTimesRoom5.map(item => item.count), backgroundColor: '#8e44ad' },
       { label: 'ห้อง 6 (ครั้ง)', data: popularTimesRoom6.map(item => item.count), backgroundColor: '#FFEB3B' },
       { label: 'ห้อง 7 (ครั้ง)', data: popularTimesRoom7.map(item => item.count), backgroundColor: '#FF4500' },
@@ -501,9 +501,9 @@ function RoomAdmin() {
     labels: ['จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์'],
     datasets: [
       { label: 'ห้องประชุมชัยพฤกษ์ (ครั้ง)', data: weekdaySummaryRoom1.map(item => item.count), backgroundColor: '#42a5f5' },
-      { label: 'ห้อง 2 (ครั้ง)', data: weekdaySummaryRoom2.map(item => item.count), backgroundColor: '#66bb6a' },
-      { label: 'ห้อง 3 (ครั้ง)', data: weekdaySummaryRoom3.map(item => item.count), backgroundColor: '#ff8c00' },
-      { label: 'ห้อง 4 (ครั้ง)', data: weekdaySummaryRoom4.map(item => item.count), backgroundColor: '#ff5733' },
+      { label: 'ห้องประชุมอินทนิล (ครั้ง)', data: weekdaySummaryRoom2.map(item => item.count), backgroundColor: '#66bb6a' },
+      { label: 'ห้องประชุมชวนชม (ครั้ง)', data: weekdaySummaryRoom3.map(item => item.count), backgroundColor: '#ff8c00' },
+      { label: 'ห้องประชุมลีลาวดี (ครั้ง)', data: weekdaySummaryRoom4.map(item => item.count), backgroundColor: '#ff5733' },
       { label: 'ห้อง 5 (ครั้ง)', data: weekdaySummaryRoom5.map(item => item.count), backgroundColor: '#8e44ad' },
       { label: 'ห้อง 6 (ครั้ง)', data: weekdaySummaryRoom6.map(item => item.count), backgroundColor: '#FFEB3B' },
       { label: 'ห้อง 7 (ครั้ง)', data: weekdaySummaryRoom7.map(item => item.count), backgroundColor: '#FF4500' },
@@ -514,7 +514,7 @@ function RoomAdmin() {
   };
 
   const pieChartData = {
-    labels: ['ห้องประชุมชัยพฤกษ์ (ครั้ง)', 'ห้อง 2 (ครั้ง)', 'ห้อง 3 (ครั้ง)', 'ห้อง 4 (ครั้ง)', 'ห้อง 5 (ครั้ง)', 'ห้อง 6 (ครั้ง)', 'ห้อง 7 (ครั้ง)', 'ห้อง 8 (ครั้ง)', 'ห้อง 9 (ครั้ง)', 'ห้อง 10 (ครั้ง)'],
+    labels: ['ห้องประชุมชัยพฤกษ์ (ครั้ง)', 'ห้องประชุมอินทนิล (ครั้ง)', 'ห้องประชุมชวนชม (ครั้ง)', 'ห้องประชุมลีลาวดี (ครั้ง)', 'ห้อง 5 (ครั้ง)', 'ห้อง 6 (ครั้ง)', 'ห้อง 7 (ครั้ง)', 'ห้อง 8 (ครั้ง)', 'ห้อง 9 (ครั้ง)', 'ห้อง 10 (ครั้ง)'],
     datasets: [
       {
         data: [
@@ -569,9 +569,9 @@ function RoomAdmin() {
               ยินดีต้อนรับ, {session?.user?.email} เข้าสู่การจัดการห้องประชุม
             </h2>
             <a href="#" onClick={() => handleRoomChange(1, "#42a5f5")} className="btn mx-2 my-1" style={{ backgroundColor: '#42a5f5', color: 'white' }}>ดูปฏิทินห้องประชุมชัยพฤกษ์</a>
-            <a href="#" onClick={() => handleRoomChange(2, "#66bb6a")} className="btn mx-2 my-1" style={{ backgroundColor: '#66bb6a', color: 'white' }}>ดูปฏิทินห้องประชุม 2</a>
-            <a href="#" onClick={() => handleRoomChange(3, "#ff8c00")} className="btn mx-2 my-1" style={{ backgroundColor: '#ff8c00', color: 'white' }}>ดูปฏิทินห้องประชุม 3</a>
-            <a href="#" onClick={() => handleRoomChange(4, "#ff5733")} className="btn mx-2 my-1" style={{ backgroundColor: '#ff5733', color: 'white' }}>ดูปฏิทินห้องประชุม 4</a>
+            <a href="#" onClick={() => handleRoomChange(2, "#66bb6a")} className="btn mx-2 my-1" style={{ backgroundColor: '#66bb6a', color: 'white' }}>ดูปฏิทินห้องประชุมอินทนิล</a>
+            <a href="#" onClick={() => handleRoomChange(3, "#ff8c00")} className="btn mx-2 my-1" style={{ backgroundColor: '#ff8c00', color: 'white' }}>ดูปฏิทินห้องประชุมชวนชม</a>
+            <a href="#" onClick={() => handleRoomChange(4, "#ff5733")} className="btn mx-2 my-1" style={{ backgroundColor: '#ff5733', color: 'white' }}>ดูปฏิทินห้องประชุมลีลาวดี</a>
             <a href="#" onClick={() => handleRoomChange(5, "#8e44ad")} className="btn mx-2 my-1" style={{ backgroundColor: '#8e44ad', color: 'white' }}>ดูปฏิทินห้องประชุม 5</a>
             <a href="#" onClick={() => handleRoomChange(6, "#FFEB3B")} className="btn mx-2 my-1" style={{ backgroundColor: '#FFEB3B', color: 'white' }}>ดูปฏิทินห้องประชุม 6</a>
             <a href="#" onClick={() => handleRoomChange(7, "#FF4500")} className="btn mx-2 my-1" style={{ backgroundColor: '#FF4500', color: 'white' }}>ดูปฏิทินห้องประชุม 7</a>
