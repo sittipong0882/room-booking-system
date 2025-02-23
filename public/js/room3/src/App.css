@@ -186,3 +186,8 @@ select:focus {
     background-image: url('./bg4.jpg');
   }
 }
+
+body {
+  font-family: 'Prompt', sans-serif;
+}
+

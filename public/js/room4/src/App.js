@@ -384,28 +384,49 @@ function Room1() {
 
           //--------------------------ล็อกอิน-------------------------------//
           <>
-            <h2>กรุณาเข้าสู่ระบบเพื่อจองห้องประชุมลีลาวดี</h2>
-            <button
-              onClick={googleSignIn}
-              style={{
-                backgroundColor: "#28a745", // สีเขียว
-                color: "white",
-                border: "none",
-                padding: "12px 24px",
-                fontSize: "18px",
-                fontWeight: "bold",
-                borderRadius: "8px",
-                cursor: "pointer",
-                marginLeft: "250px", // ขยับไปทางขวา
-                transition: "0.3s",
-                boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)"
-              }}
-              onMouseOver={(e) => e.target.style.backgroundColor = "#218838"} // เปลี่ยนสีเมื่อชี้
-              onMouseOut={(e) => e.target.style.backgroundColor = "#28a745"}   // คืนค่าสีปกติ
-            >
-              เข้าสู่ระบบด้วย Google
-            </button>
+            <div style={{
+              display: "flex",
+              flexDirection: "column", // เรียงแนวตั้ง
+              justifyContent: "center", // จัดให้อยู่กึ่งกลางแนวตั้ง
+              alignItems: "center", // จัดให้อยู่กึ่งกลางแนวนอน
+              height: "20vh", // ให้เต็มจอแนวตั้ง
+              textAlign: "center" // จัดข้อความให้อยู่ตรงกลาง
+            }}>
+              <div style={{
+                display: "flex",
+                flexDirection: "column", // เรียงแนวตั้ง
+                justifyContent: "center", // จัดให้อยู่กึ่งกลางแนวตั้ง
+                alignItems: "center", // จัดให้อยู่กึ่งกลางแนวนอน
+                height: "20vh", // ให้เต็มจอแนวตั้ง
+                textAlign: "center" // จัดข้อความให้อยู่ตรงกลาง
+              }}>
+                
+              </div>
+              <h2>กรุณาเข้าสู่ระบบเพื่อจองห้องประชุมลีลาวดี</h2>
+
+              <button
+                onClick={googleSignIn}
+                style={{
+                  backgroundColor: "#28a745", // สีเขียว
+                  color: "white",
+                  border: "none",
+                  padding: "12px 24px",
+                  fontSize: "18px",
+                  fontWeight: "bold",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                  transition: "0.3s",
+                  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                  marginTop: "20px" // เพิ่มระยะห่างระหว่างปุ่มกับข้อความ
+                }}
+                onMouseOver={(e) => e.target.style.backgroundColor = "#218838"} // เปลี่ยนสีเมื่อชี้
+                onMouseOut={(e) => e.target.style.backgroundColor = "#28a745"}   // คืนค่าสีปกติ
+              >
+                เข้าสู่ระบบด้วย Google
+              </button>
+            </div>
           </>
+
 
         )}
       </div>

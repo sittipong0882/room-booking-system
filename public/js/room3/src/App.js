@@ -25,7 +25,7 @@ function Room2() {
   const [phone, setPhone] = useState(""); // สถานะสำหรับเบอร์โทรศัพท์
 
   const [events, setEvents] = useState([]);
-  
+
   const session = useSession();
   const supabase = useSupabaseClient();
   const { isLoading } = useSessionContext();
@@ -62,12 +62,12 @@ function Room2() {
   //--ดึงข้อมูลปฎิทิน--//
   async function getCalendarEvents() {
     const response = await fetch
-    ("https://www.googleapis.com/calendar/v3/calendars/c_f3167f0a14bd4729f7194a488b83fc4ec289510e334831049a8f92476aa24622@group.calendar.google.com/events", {
-      method: "GET",
-      headers: {
-        Authorization: 'Bearer ' + session.provider_token,
-      },
-    });
+      ("https://www.googleapis.com/calendar/v3/calendars/c_f3167f0a14bd4729f7194a488b83fc4ec289510e334831049a8f92476aa24622@group.calendar.google.com/events", {
+        method: "GET",
+        headers: {
+          Authorization: 'Bearer ' + session.provider_token,
+        },
+      });
 
     if (!response.ok) {
       throw new Error('ข้อผิดพลาดในการดึงข้อมูลกิจกรรม');
@@ -104,7 +104,7 @@ function Room2() {
     if (totalBookedHours >= 11) { // ถ้ามีการจอง 11 ชั่วโมง (8:00 - 19:00)
       return 'red'; // จองทั้งวัน
     }
-    
+
     return 'green'; // จองบางช่วงเวลา
   };
 
@@ -126,27 +126,27 @@ function Room2() {
     //-----------------------------------//
     if (!eventName.trim()) {
       Swal.fire({
-          icon: "warning",
-          title: "กรุณาใส่ชื่อผู้จอง",
-          text: "ชื่อผู้จองเป็นข้อมูลที่จำเป็น กรุณากรอกชื่อ",
-          confirmButtonText: "ตกลง",
-          confirmButtonColor: "#ffc107"
+        icon: "warning",
+        title: "กรุณาใส่ชื่อผู้จอง",
+        text: "ชื่อผู้จองเป็นข้อมูลที่จำเป็น กรุณากรอกชื่อ",
+        confirmButtonText: "ตกลง",
+        confirmButtonColor: "#ffc107"
       });
       return;
-  }
-  
-  if (!phone.trim()) {
+    }
+
+    if (!phone.trim()) {
       Swal.fire({
-          icon: "warning",
-          title: "กรุณาใส่หมายเลขโทรศัพท์",
-          text: "หมายเลขโทรศัพท์เป็นข้อมูลที่จำเป็น กรุณากรอกหมายเลขโทรศัพท์ของคุณ",
-          confirmButtonText: "ตกลง",
-          confirmButtonColor: "#ffc107"
+        icon: "warning",
+        title: "กรุณาใส่หมายเลขโทรศัพท์",
+        text: "หมายเลขโทรศัพท์เป็นข้อมูลที่จำเป็น กรุณากรอกหมายเลขโทรศัพท์ของคุณ",
+        confirmButtonText: "ตกลง",
+        confirmButtonColor: "#ffc107"
       });
       return;
-  }
-  
-  //-----------------------------------//
+    }
+
+    //-----------------------------------//
 
     const newStart = new Date(selectedDate);
     newStart.setHours(startHour, 0, 0, 0); // ตั้งค่าวินาทีและมิลลิวินาทีให้เป็น 0
@@ -155,117 +155,117 @@ function Room2() {
     newEnd.setHours(endHour, 0, 0, 0); // ตั้งค่าวินาทีและมิลลิวินาทีให้เป็น 0
 
     const isConflict = events.some(event => {
-        return (
-            (newStart >= event.start && newStart < event.end) || 
-            (newEnd > event.start && newEnd <= event.end)
-        );
+      return (
+        (newStart >= event.start && newStart < event.end) ||
+        (newEnd > event.start && newEnd <= event.end)
+      );
     });
 
-    
+
 
     if (isConflict) {
-        Swal.fire({
-            icon: "error",
-            title: "ไม่สามารถจองได้",
-            text: "มีการจองซ้ำในช่วงเวลานี้ กรุณาเลือกเวลาอื่น",
-            confirmButtonText: "ตกลง",
-            confirmButtonColor: "#d33"
-        });
-        return;
+      Swal.fire({
+        icon: "error",
+        title: "ไม่สามารถจองได้",
+        text: "มีการจองซ้ำในช่วงเวลานี้ กรุณาเลือกเวลาอื่น",
+        confirmButtonText: "ตกลง",
+        confirmButtonColor: "#d33"
+      });
+      return;
     }
     const event = {
-        summary: "ห้องประชุมชวนชม",
+      summary: "ห้องประชุมชวนชม",
       description: `${eventName}\nเบอร์โทรศัพท์: ${phone}\n${eventDescription}
       ไมโครโฟน: ${additionalItems.microphone}
       โปเจคเตอร์: ${additionalItems.projector}
       พอยเตอร์: ${additionalItems.laserPointer}
       คอมพิวเตอร์: ${additionalItems.computer}`, // ✅ เพิ่มจำนวนคอมพิวเตอร์ 
-        start: {
-            dateTime: newStart.toISOString(), // ใช้ ISOString เพื่อให้แน่ใจว่าเป็นรูปแบบ UTC
-            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // ใช้ time zone ของเครื่องผู้ใช้
-        },
-        end: {
-            dateTime: newEnd.toISOString(),
-            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        }
+      start: {
+        dateTime: newStart.toISOString(), // ใช้ ISOString เพื่อให้แน่ใจว่าเป็นรูปแบบ UTC
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // ใช้ time zone ของเครื่องผู้ใช้
+      },
+      end: {
+        dateTime: newEnd.toISOString(),
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      }
     };
 
     await fetch("https://www.googleapis.com/calendar/v3/calendars/c_f3167f0a14bd4729f7194a488b83fc4ec289510e334831049a8f92476aa24622@group.calendar.google.com/events", {
       method: "POST",
-        headers: {
-            Authorization: 'Bearer ' + session.provider_token,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(event),
+      headers: {
+        Authorization: 'Bearer ' + session.provider_token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(event),
     })
-    .then((response) => {
-      if (!response.ok) {
+      .then((response) => {
+        if (!response.ok) {
           throw new Error("Network response was not ok");
-      }
-      return response.json();
-  })
-  .then((data) => {
-    console.log(data);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
 
-    Swal.fire({
-        icon: "success",
-        title: "จองสำเร็จแล้ว!",
-        text: "กรุณาตรวจสอบตารางเวลาในปฏิทิน",
-        confirmButtonText: "ตกลง",
-        confirmButtonColor: "#28a745"
-    }).then(() => {
-        getCalendarEvents().then(fetchedEvents => {
+        Swal.fire({
+          icon: "success",
+          title: "จองสำเร็จแล้ว!",
+          text: "กรุณาตรวจสอบตารางเวลาในปฏิทิน",
+          confirmButtonText: "ตกลง",
+          confirmButtonColor: "#28a745"
+        }).then(() => {
+          getCalendarEvents().then(fetchedEvents => {
             setEvents(fetchedEvents);
-        });
+          });
 
-        // รีเซ็ตค่าฟอร์มให้เป็นค่าเริ่มต้น
-        setEventName(""); 
-        setPhone(""); 
-        setEventDescription(""); 
-        setSelectedDate(new Date()); 
-        setStartHour(8); 
-        setEndHour(9); 
-        setAdditionalItems({
+          // รีเซ็ตค่าฟอร์มให้เป็นค่าเริ่มต้น
+          setEventName("");
+          setPhone("");
+          setEventDescription("");
+          setSelectedDate(new Date());
+          setStartHour(8);
+          setEndHour(9);
+          setAdditionalItems({
             projector: 0,
             laserPointer: 0,
             microphone: 0
+          });
         });
-    });
-})
+      })
 
-  .catch(error => {
-      console.error("ข้อผิดพลาดในการจอง:", error);
-  
-      Swal.fire({
+      .catch(error => {
+        console.error("ข้อผิดพลาดในการจอง:", error);
+
+        Swal.fire({
           icon: "error",
           title: "เกิดข้อผิดพลาด!",
           text: "ไม่สามารถทำการจองได้ กรุณาลองใหม่อีกครั้ง",
           confirmButtonText: "ปิด",
           confirmButtonColor: "#d33"
+        });
       });
-  });
-}
+  }
 
   return (
-<div className="App">
+    <div className="App">
       <div className="container">
         {session ? (
           <>
-                            <h2 style={{
-                    border: "3px solid #28A745", // เส้นขอบสีเขียว
-                    padding: "15px 20px", // เว้นระยะรอบตัวอักษร
-                    borderRadius: "10px", // ขอบมน
-                    textAlign: "center", // จัดข้อความตรงกลาง
-                    backgroundColor: "#DFF6DD", // พื้นหลังสีเขียวอ่อน
-                    color: "#155724", // สีข้อความให้เข้ากับธีม
-                    boxShadow: "4px 4px 10px rgba(0, 0, 0, 0.1)" // เพิ่มเงานุ่ม ๆ
-                }}>
-                    ยินดีต้อนรับ, {session.user.email} ห้องประชุมชวนชม
-                </h2>
+            <h2 style={{
+              border: "3px solid #28A745", // เส้นขอบสีเขียว
+              padding: "15px 20px", // เว้นระยะรอบตัวอักษร
+              borderRadius: "10px", // ขอบมน
+              textAlign: "center", // จัดข้อความตรงกลาง
+              backgroundColor: "#DFF6DD", // พื้นหลังสีเขียวอ่อน
+              color: "#155724", // สีข้อความให้เข้ากับธีม
+              boxShadow: "4px 4px 10px rgba(0, 0, 0, 0.1)" // เพิ่มเงานุ่ม ๆ
+            }}>
+              ยินดีต้อนรับ, {session.user.email} ห้องประชุมชวนชม
+            </h2>
 
 
-                        <div className="calendar-container">
-                        <h2 style={{
+            <div className="calendar-container">
+              <h2 style={{
                 border: "3px solid #007BFF", // เส้นขอบสีน้ำเงิน
                 padding: "15px 20px", // เว้นระยะห่างขอบ
                 borderRadius: "10px", // ทำให้ขอบมน
@@ -273,21 +273,21 @@ function Room2() {
                 backgroundColor: "#E3F2FD", // พื้นหลังสีน้ำเงินอ่อน
                 color: "#004085", // สีข้อความให้เข้ากับธีม
                 boxShadow: "4px 4px 10px rgba(0, 0, 0, 0.1)" // เพิ่มเงาให้นุ่มๆ
-            }}>
+              }}>
                 ปฏิทินการจองห้องประชุม
-            </h2>
+              </h2>
 
               <div style={{ display: "flex", justifyContent: "space-between", gap: "20px" }}>
-    <h3 style={{ backgroundColor: "red", color: "white", padding: "10px", borderRadius: "5px" }}>
-        การจองเต็มทั้งวัน
-    </h3>
-    <h3 style={{ backgroundColor: "green", color: "white", padding: "10px", borderRadius: "5px" }}>
-        การจองว่างในบางเวลา
-    </h3>
-    <h3 style={{ backgroundColor: "gray", color: "white", padding: "10px", borderRadius: "5px" }}>
-        การจองว่างทั้งวัน
-    </h3>
-</div>
+                <h3 style={{ backgroundColor: "red", color: "white", padding: "10px", borderRadius: "5px" }}>
+                  การจองเต็มทั้งวัน
+                </h3>
+                <h3 style={{ backgroundColor: "green", color: "white", padding: "10px", borderRadius: "5px" }}>
+                  การจองว่างในบางเวลา
+                </h3>
+                <h3 style={{ backgroundColor: "gray", color: "white", padding: "10px", borderRadius: "5px" }}>
+                  การจองว่างทั้งวัน
+                </h3>
+              </div>
 
 
 
@@ -313,16 +313,16 @@ function Room2() {
               <input type="text" value={eventName} onChange={e => setEventName(e.target.value)} />
 
               <label>เบอร์โทรศัพท์:</label>
-              <input 
-                type="text" 
-                value={phone} 
+              <input
+                type="text"
+                value={phone}
                 onChange={e => {
                   const value = e.target.value;
                   // ตรวจสอบให้ใส่เฉพาะตัวเลข
                   if (/^\d*$/.test(value)) {
                     setPhone(value);
                   }
-                }} 
+                }}
                 placeholder="กรุณากรอกเบอร์โทรศัพท์"
               />
 
@@ -370,42 +370,52 @@ function Room2() {
               <button className="btn create-btn" onClick={createCalendarEvent}>
                 ยืนยันการจอง
               </button>
-              
+
               <button className="btn sign-out-btn" onClick={signOut}>
                 ออกจากระบบ
               </button>
-              
+
               <a href="https://hoomebookingroom.web.app" className="btn back-btn">
                 กลับหน้าหลัก
               </a>
             </div>
           </>
         ) : (
-          
-          //--------------------------ล็อกอิน-------------------------------//
-   <>
-   <h2>กรุณาเข้าสู่ระบบเพื่อจองห้องประชุมชวนชม</h2>
-   <button 
-     onClick={googleSignIn} 
-     style={{
-       backgroundColor: "#28a745", // สีเขียว
-       color: "white",
-       border: "none",
-       padding: "12px 24px",
-       fontSize: "18px",
-       fontWeight: "bold",
-       borderRadius: "8px",
-       cursor: "pointer",
-       marginLeft: "250px", // ขยับไปทางขวา
-       transition: "0.3s",
-       boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)"
-     }}
-     onMouseOver={(e) => e.target.style.backgroundColor = "#218838"} // เปลี่ยนสีเมื่อชี้
-     onMouseOut={(e) => e.target.style.backgroundColor = "#28a745"}   // คืนค่าสีปกติ
-   >
-     เข้าสู่ระบบด้วย Google
-   </button>
- </>
+
+          //--------------------------ล็อกอินกรุณาเข้าสู่ระบบเพื่อจองห้องประชุมชวนชม-------------------------------//
+          <>
+            <div style={{
+              display: "flex",
+              flexDirection: "column", // เรียงแนวตั้ง
+              justifyContent: "center", // จัดให้อยู่กึ่งกลางแนวตั้ง
+              alignItems: "center", // จัดให้อยู่กึ่งกลางแนวนอน
+              height: "20vh", // ให้เต็มจอแนวตั้ง
+              textAlign: "center" // จัดข้อความให้อยู่ตรงกลาง
+            }}>
+              <h2>กรุณาเข้าสู่ระบบเพื่อจองห้องประชุมชวนชม</h2>
+
+              <button
+                onClick={googleSignIn}
+                style={{
+                  backgroundColor: "#28a745", // สีเขียว
+                  color: "white",
+                  border: "none",
+                  padding: "12px 24px",
+                  fontSize: "18px",
+                  fontWeight: "bold",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                  transition: "0.3s",
+                  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                  marginTop: "20px" // เพิ่มระยะห่างระหว่างปุ่มกับข้อความ
+                }}
+                onMouseOver={(e) => e.target.style.backgroundColor = "#218838"} // เปลี่ยนสีเมื่อชี้
+                onMouseOut={(e) => e.target.style.backgroundColor = "#28a745"}   // คืนค่าสีปกติ
+              >
+                เข้าสู่ระบบด้วย Google
+              </button>
+            </div>
+          </>
         )}
       </div>
     </div>

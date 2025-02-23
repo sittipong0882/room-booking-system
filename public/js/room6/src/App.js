@@ -386,6 +386,16 @@ function Room1() {
 
           //--------------------------ล็อกอิน-------------------------------//
           <>
+          <div style={{
+              display: "flex",
+              flexDirection: "column", // เรียงแนวตั้ง
+              justifyContent: "center", // จัดให้อยู่กึ่งกลางแนวตั้ง
+              alignItems: "center", // จัดให้อยู่กึ่งกลางแนวนอน
+              height: "3vh", // ให้เต็มจอแนวตั้ง
+              textAlign: "center" // จัดข้อความให้อยู่ตรงกลาง
+            }}>
+
+            </div>
             <h2>กรุณาเข้าสู่ระบบเพื่อจองห้องประชุมหมายเลข 6</h2>
             <button
               onClick={googleSignIn}

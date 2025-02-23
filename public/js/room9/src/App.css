@@ -148,6 +148,11 @@ select:focus {
   margin-bottom: 20px;
 }
 
+
+body {
+  font-family: 'Prompt', sans-serif;
+}
+
 .App {
   position: relative;
   min-height: 100vh;

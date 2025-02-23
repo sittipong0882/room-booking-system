@@ -231,6 +231,15 @@ select:focus {
   width: 150%;
 }
 
+/* กำหนดให้ทุกข้อความใช้ฟอนต์ Prompt */
+* {
+  font-family: 'Prompt', sans-serif !important;
+}
+
+body {
+  font-family: 'Prompt', sans-serif;
+}
+
 /* ปรับแต่งปุ่มเข้าสู่ระบบ */
 .login-btn {
   background-color: #2ecc71;

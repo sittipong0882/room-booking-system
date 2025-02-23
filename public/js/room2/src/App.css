@@ -156,6 +156,11 @@ select:focus {
   overflow: hidden; /* ป้องกันการเกิด scroll */
 }
 
+body {
+  font-family: 'Prompt', sans-serif;
+}
+
+
 .App::before {
   content: "";
   position: absolute;
